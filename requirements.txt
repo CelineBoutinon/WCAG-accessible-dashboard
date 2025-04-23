@@ -13,3 +13,4 @@ matplotlib==3.10.1
 pytest==8.3.5
 streamlit==1.44.1
 streamlit-shap==1.0.2
+streamviz==5.1
