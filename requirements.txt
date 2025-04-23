@@ -1,0 +1,15 @@
+flask==3.1.0
+joblib==1.4.2
+pandas==2.2.3
+gunicorn==23.0.0
+imbalanced-learn==0.13.0
+imblearn==0.0
+scikit-learn==1.6.1
+mlflow==2.21.0
+shap==0.47.0
+lightgbm==4.5.0
+requests==2.32.3
+matplotlib==3.10.1
+pytest==8.3.5
+streamlit==1.44.1
+streamlit-shap==1.0.2
