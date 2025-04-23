@@ -13,8 +13,8 @@ import json
 import shap
 import matplotlib.pyplot as plt
 import numpy as np
-# import plotly.graph_objects as go
-import streamviz
+import plotly.graph_objects as go
+# import streamviz
 
 # Display title & company logo
 st.title("Welcome to the ")
@@ -36,7 +36,8 @@ shap_values_client_json = app_data["Shap values client"]
 shap_values_client_dict = json.loads(shap_values_client_json)[0]
 shap_values_array = np.array(list(shap_values_client_dict.values()))
 feature_names = list(shap_values_client_dict.keys())
-base_value = app_data.get("Expected Shap Value") 
+base_value = app_data.get("Expected Shap Value")
+threshold_value =  app_data.get("Threshold")
 
 # Display the response from the API (optional)
 if app_response.status_code == 200:
@@ -50,14 +51,25 @@ else:
 
 
 # Display client default probability on a gauge
+bar_color = 'red' if app_data['Client default probability'] > threshold_value else 'forestgreen'
+
 fig = go.Figure(go.Indicator(
-    mode = "gauge+number",
+    mode = "gauge+number+delta",
     value = app_data['Client default probability'] * 100,
     domain = {'x': [0, 1], 'y': [0, 1]},
-    title = {'text': "Client default probability"}))
+    delta = {'reference': 50, 'increasing': {'color': "red"}, 'decreasing': {'color': "forestgreen"}},
+    title = {'text': "Client default probability",  'font': {'size': 24}},
+    gauge = {'axis': {'range': [None, 100]},
+             'bar': {'color': bar_color},
+             'steps' : [
+                 {'range': [0, 50], 'color': "palegreen"},
+                 {'range': [50, 100], 'color': "lightcoral"}],
+                  'threshold' : {'line': {'color': "red", 'width': 4}, 'thickness': 0.502, 'value': 50}
+                  }
+    ))
 
-# fig.show()
-st.pyplot(fig)
+st.plotly_chart(fig)
+
 
 # Create SHAP explanation object
 if shap_values_array is not None:

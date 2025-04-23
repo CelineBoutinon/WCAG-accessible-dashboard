@@ -85,7 +85,8 @@ def predict(id):
         'Key Decision Factors': sorted_top_5_dict,
         'Expected Shap Value' : expected_value,
         'Shap values client' : shap_values_client.to_json(orient='records'),
-        'Client data' : client_particulars.to_json(orient='records')
+        'Client data' : client_particulars.to_json(orient='records'),
+        'Threshold': custom_threshold
     })
 
 if __name__ == "__main__":
