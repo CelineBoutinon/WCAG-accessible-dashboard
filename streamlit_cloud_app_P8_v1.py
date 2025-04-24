@@ -244,7 +244,6 @@ if app_response.status_code == 200:
                          name = "Average - All clients",
                          line=dict(dash='solid', color = "#242164", width = 2))
 
-
     else:
         st.warning(f"Client ID {selected_value} not found in the dataset for the box plot.")
 
