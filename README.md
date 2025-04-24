@@ -40,7 +40,7 @@ Les données brutes sont disponibles ici: https://www.kaggle.com/c/home-credit-d
 
 ## Organisation du projet
 
-Pour l'EDA et la modelisation, se référer au repo https://github.com/CelineBoutinon/credit-scoring.git
+Pour l'EDA et la modélisation, se référer au repo https://github.com/CelineBoutinon/credit-scoring.git
 
 ```
 ├── LICENSE                      <- Open-source license if one is chosen
@@ -65,18 +65,18 @@ Pour l'EDA et la modelisation, se référer au repo https://github.com/CelineBou
 
 ## Requirements
 
-flask==3.1.0
-joblib==1.4.2
-pandas==2.2.3
-gunicorn==23.0.0
-imbalanced-learn==0.13.0
-imblearn==0.0
-scikit-learn==1.6.1
-mlflow==2.21.0
-shap==0.47.0
-lightgbm==4.5.0
-requests==2.32.3
-matplotlib==3.10.1
-pytest==8.3.5
-streamlit==1.44.1
-streamlit-shap==1.0.2  
+flask==3.1.0  
+joblib==1.4.2  
+pandas==2.2.3  
+gunicorn==23.0.0  
+imbalanced-learn==0.13.0  
+imblearn==0.0  
+scikit-learn==1.6.1  
+mlflow==2.21.0  
+shap==0.47.0  
+lightgbm==4.5.0  
+requests==2.32.3  
+matplotlib==3.10.1  
+pytest==8.3.5  
+streamlit==1.44.1  
+streamlit-shap==1.0.2    
