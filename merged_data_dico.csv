@@ -1,0 +1,100 @@
+Feature,Imported / Calculated from,Definition,Data Type,Unit,Already normalised,,,,,,,,
+SK_ID_CURR,application_{train|test}.csv,ID of loan in our sample,string,N/A,N/A,,,,,,,,
+TARGET,application_{train|test}.csv,"Target variable (1 - client with payment difficulties: he/she had late payment more than X days on at least one of the first Y installments of the loan in our sample, 0 - all other cases)",boolean,N/A,N/A,,,,,,,,
+NAME_CONTRACT_TYPE,application_{train|test}.csv,Identification if loan is cash or revolving,string,N/A,N/A,,,,,,,,
+IS_MALE,application_{train|test}.csv,Gender of the client,boolean,N/A,N/A,,,,,,,,
+FLAG_OWN_CAR,application_{train|test}.csv,Flag if the client owns a car,boolean,N/A,N/A,,,,,,,,
+FLAG_OWN_REALTY,application_{train|test}.csv,Flag if client owns a house or flat,boolean,N/A,N/A,,,,,,,,
+AMT_CREDIT,application_{train|test}.csv,Credit amount of the loan,float,US$,No,,,,,,,,
+REGION_POPULATION_RELATIVE,application_{train|test}.csv,Normalized population of region where client lives (higher number means the client lives in more populated region),float,N/A,Y,,,,,,,,
+DAYS_REGISTRATION,application_{train|test}.csv,How many days before the application did client change his registration,int,days,No,,,,,,,,
+DAYS_ID_PUBLISH,application_{train|test}.csv,How many days before the application did client change the identity document with which he applied for the loan,int,days,N,,,,,,,,
+FLAG_EMAIL,application_{train|test}.csv,"Did client provide email (1=YES, 0=NO)",boolean,N/A,N/A,,,,,,,,
+REGION_RATING_CLIENT,application_{train|test}.csv,"Our rating of the region where client lives (1,2,3)",int,None,No,,,,,,,,
+REGION_RATING_CLIENT_W_CITY,application_{train|test}.csv,"Our rating of the region where client lives with taking city into account (1,2,3)",int,None,No,,,,,,,,
+OBS_30_CNT_SOCIAL_CIRCLE,application_{train|test}.csv,How many observation of client's social surroundings with observable 30 DPD (days past due) default,int,days,No,,,,,,,,
+DEF_30_CNT_SOCIAL_CIRCLE,application_{train|test}.csv,How many observation of client's social surroundings defaulted on 30 DPD (days past due) ,int,days,No,,,,,,,,
+OBS_60_CNT_SOCIAL_CIRCLE,application_{train|test}.csv,How many observation of client's social surroundings with observable 60 DPD (days past due) default,int,days,No,,,,,,,,
+DEF_60_CNT_SOCIAL_CIRCLE,application_{train|test}.csv,How many observation of client's social surroundings defaulted on 60 (days past due) DPD,int,days,No,,,,,,,,
+DAYS_LAST_PHONE_CHANGE,application_{train|test}.csv,How many days before application did client change phone,int,days,No,,,,,,,,
+DISPOSABLE_INCOME,application_{train|test}.csv,application_train_test['AMT_INCOME_TOTAL'] - application_train_test['AMT_ANNUITY'],float,US$,N,,,,,,,,
+DISPOSABLE_INCOME_per_capita,application_{train|test}.csv, application_train_test['DISPOSABLE_INCOME'] / application_train_test['CNT_FAM_MEMBERS'],float,US$,N,,,,,,,,
+WHITE_COLLAR,application_{train|test}.csv,"from application_train_test['OCCUPATION_TYPE']:
+blue_collar_jobs = ['Laborers', 'Sales staff', 'Core staff', 'Drivers', 'Security staff', 'Cooking staff', 'Cleaning staff',
+                    'Private service staff', 'Low-skill Laborers', 'Waiters/barmen staff']
+white_collar_jobs = ['Managers', 'High skill tech staff', 'Accountants', 'Secretaries', 'Medicine staff', 'Realty agents', 'HR staff',
+                     'IT staff']",boolean,N/A,N/A,,,,,,,,
+INCOME_TYPE,application_{train|test}.csv,"from application_train_test['NAME_INCOME_TYPE']:
+fixed_salary = ['Working', 'State servant']
+commission = ['Commercial associate', 'Businessman']
+benefits = ['Pensioner', 'Unemployed', 'Student', 'Maternity leave']",string,N/A,N/A,,,,,,,,
+UPPER_EDUCATION,application_{train|test}.csv,"from application_train_test['NAME_EDUCATION_TYPE':
+secondary_or_lower = ['Secondary / secondary special', 'Lower secondary']
+higher_or_tertiary = ['Higher education', 'Incomplete higher', 'Academic degree']",boolean,N/A,N/A,,,,,,,,
+IS_MARRIED,application_{train|test}.csv,"from application_train_test['NAME_FAMILY_STATUS']:
+married = ['Married', 'Civil marriage']
+single_or_unknown = ['Single / not married', 'Separated', 'Widow', 'Unknown']",boolean,N/A,N/A,,,,,,,,
+LIVES_INDEPENDENTLY,application_{train|test}.csv,"from application_train_test['NAME_HOUSING_TYPE']:
+independent = ['House / apartment', 'Rented apartment', 'Office apartment']
+social = ['With parents', 'Municipal apartment', 'Co-op apartment']",boolean,N/A,N/A,,,,,,,,
+YEAR_BIRTH,application_{train|test}.csv,age of client from application_train_test['DAYS_BIRTH'] * (-1) / 365,float,years,No,,,,,,,,
+YEARS_EMPLOYED_AS_ADULT_%,application_{train|test}.csv,(application_train_test['DAYS_EMPLOYED'] / 365) / (application_train_test['YEAR_BIRTH'] - 21),float,%,No,,,,,,,,
+PHONE_PROVIDED,application_{train|test}.csv,"=1 if any of the columns 'FLAG_MOBIL', 'FLAG_EMP_PHONE', 'FLAG_WORK_PHONE' or 'FLAG_PHONE' =1",boolean,N/A,N/A,,,,,,,,
+PHONE_REACHABLE,application_{train|test}.csv,=1 if 'FLAG_CONT_MOBILE' =1,boolean,N/A,N/A,,,,,,,,
+ADDRESS_MISMATCH,application_{train|test}.csv,"=1 if any of the columns 'REG_REGION_NOT_LIVE_REGION', 'REG_REGION_NOT_WORK_REGION',   'LIVE_REGION_NOT_WORK_REGION',    'REG_CITY_NOT_LIVE_CITY' , 'REG_CITY_NOT_WORK_CITY' or 'LIVE_CITY_NOT_WORK_CITY' =1",boolean,N/A,N/A,,,,,,,,
+CREDIT_RATING,application_{train|test}.csv,"(application_train_test['EXT_SOURCE_1'] + application_train_test['EXT_SOURCE_2'] + 
+                                           application_train_test['EXT_SOURCE_3']) / 3",float,None,Yes,,,,,,,,
+NB_APPLICATION_DOCUMENTS_%,application_{train|test}.csv,from columns 'FLAG_DOCUMENT_n' - total number of documents provided divided by 20,float,%,No,,,,,,,,
+REQUESTS_ABOUT_CLIENT_1Y,application_{train|test}.csv,"(application_train_test['AMT_REQ_CREDIT_BUREAU_HOUR'] +
+                                                      application_train_test['AMT_REQ_CREDIT_BUREAU_DAY'] +
+                                                      application_train_test['AMT_REQ_CREDIT_BUREAU_WEEK'] +
+                                                      application_train_test['AMT_REQ_CREDIT_BUREAU_MON'] +
+                                                      application_train_test['AMT_REQ_CREDIT_BUREAU_QRT'] +
+                                                      application_train_test['AMT_REQ_CREDIT_BUREAU_YEAR'])",int,None,No,,,,,,,,
+EMPLOYMENT_SECTOR,application_{train|test}.csv,"from columns application_train_test['ORGANIZATION_TYPE']: 
+primary = ['Agriculture']
+secondary = ['Electricity', 'Construction', 'Housing','Industry: type 11','Industry: type 1', 'Industry: type 4','Industry: type 7',
+            'Industry: type 3','Industry: type 9','Industry: type 2','Industry: type 12','Industry: type 5', 'Industry: type 10',
+             'Industry: type 13','Industry: type 8','Industry: type 6']
+tertiary = ['Business Entity Type 3','Medicine','Business Entity Type 2','Transport: type 2','Trade: type 7','Services','Transport: type 4',
+           'Security','Trade: type 2','Transport: type 3','Business Entity Type 1','Restaurant','Hotel','Trade: type 3','Bank','Insurance', 
+           'Trade: type 6','Transport: type 1','Mobile','Trade: type 1', 'Legal Services', 'Advertising', 'Trade: type 5', 'Cleaning',
+           'School','Religion','Kindergarten', 'University','Culture', 'Trade: type 4', 'Telecom','Realtor']
+government = ['Government', 'Military', 'Security Ministries','Emergency','Police','Postal']
+other = ['Other', 'XNA', 'Self-employed']",string,N/A,N/A,,,,,,,,
+b_AMT_CREDIT_MAX_OVERDUE_max,bureau.csv & bureau_balance.csv,maximum amount overdue at any one point in the whole of the client's history with the Credit Bureau (active and closed credits),float,US$,No,,,,,,,,
+b_AMT_CREDIT_SUM_OVERDUE_sum,bureau.csv & bureau_balance.csv,current total of overdue amounts on all of the client's credits declared to the Credit Bureau,float,US$,No,,,,,,,,
+pcb_CNT_INSTALMENT_FUTURE_max,POS_CASH_balance.csv,maximum number of future instalments due on all of the client's outstanding cash loans with Home Credit,int,None,No,,,,,,,,
+ccb_AMT_BALANCE_mean,credit_card_balance.csv,average monthly credit card balance on all of the client's history with Home Credit,float,US$,No,,,,,,,,
+ccb_AMT_CREDIT_LIMIT_ACTUAL_mean,credit_card_balance.csv,average credit card limit during the month of the previous credit across all credit cards held by the client,float,US$,No,,,,,,,,
+ccb_AMT_DRAWINGS_TOTAL_mean,credit_card_balance.csv,average total drawings during the month of the previous credit across all credit cards held by the client,float,US$,No,,,,,,,,
+ccb_AMT_TOTAL_RECEIVABLE_mean,credit_card_balance.csv,average total amount receivable during the month of the previous credit across all credit cards held by the client,float,US$,No,,,,,,,,
+ccb_TOTAL_INSTALMENTS_max,credit_card_balance.csv,maximum total amount of instalments remaining across all credit cards held by the client,int,None,No,,,,,,,,
+ccb_CNT_DRAWINGS_TOTAL_mean,credit_card_balance.csv,average current total drawings across all credit cards held by the client,float,US$,No,,,,,,,,
+ccb_CARD_OVERDRAWN_sum,credit_card_balance.csv,total amount by which the client is currently exceeding the credit limit across all credit cards held by the client,float,US$,No,,,,,,,,
+ccb_CARD_OVERDRAWN_%_mean,credit_card_balance.csv,average amount by which the client has exceeded the credit limit across all credit cards held by the client,float,%,No,,,,,,,,
+ip_PMT_DELAY_mean,installments_payments.csv,average number of days the client paid instalments late,float,days,No,,,,,,,,
+ip_EARLY_PMT_mean,installments_payments.csv,average number of days the client paid instalments early,float,days,No,,,,,,,,
+ip_AMT_OVERPAID_%_mean,installments_payments.csv,average amount by which the client's repayment has exceeded the instalment due,float,%,No,,,,,,,,
+ip_AMT_UNDERPAID_%_mean,installments_payments.csv,average shortfall on the amount of the instalments due by the client,float,%,No,,,,,,,,
+pa_AMT_APPLICATION_mean,previous_application.csv,average amount of all past applications for any type of credit with Home Credit by the client (active and closed credits),float,US$,No,,,,,,,,
+pa_RATE_DOWN_PAYMENT_mean,previous_application.csv,average amount of down payment for all past applications for any type of credit with Home Credit by the client (active and closed credits),float,US$,No,,,,,,,,
+pa_NFLAG_INSURED_ON_APPROVAL_sum,previous_application.csv,sum of all approved credits which the client has insured upon approval by Home Credit,int,None,No,,,,,,,,
+pa_BANK_DECLINED_sum,previous_application.csv,total number of credit application made by the client and declined by Home Credit (excluding current application),int,None,No,,,,,,,,
+pa_REMAINING_CREDIT_DURATION_Y_mean,previous_application.csv,average credit duration in years for all the active credits the client has with Home Credit,float,years,No,,,,,,,,
+pa_CREDIT_SECURITY_sum,previous_application.csv,number of credits the client has with Home Credit where the amount of the credit is less than the value of the asset financed by the client with the credit,int,None,No,,,,,,,,
+TOTAL_APPROVED_CREDITS,"bureau.csv , POS_CASH_balance.csv & previous_application.csv",total number of credit applications made by the client with Home Credit or other lenders and which have been approved (excluding current application),int,None,No,,,,,,,,
+TOTAL_PAYMENT_DELAYS_DAYS,"POS_CASH_balance.csv, credit_card_balance.csv, bureau.csv & bureau_balance.csv",total average number of days by which the client is late on repayments across their whole credit history with Home Credit or other lenders (active or closed credits),float,days,No,,,,,,,,
+TOTAL_ACTIVE_CAR_LOANS,"bureau.csv, bureau_balance.csv & previous_application.csv",total number of currenty active car loans the client has with Home Credit or any other lenders,int,None,No,,,,,,,,
+TOTAL_ACTIVE_OTHER_LOANS,"bureau.csv, bureau_balance.csv & previous_application.csv",total number of currenty active other loans the client has with Home Credit or any other lenders,int,None,No,,,,,,,,
+TOTAL_ACTIVE_CONSUMER_LOANS,"bureau.csv, bureau_balance.csv & previous_application.csv",total number of currenty active consumer loans the client has with Home Credit or any other lenders,int,None,No,,,,,,,,
+TOTAL_ACTIVE_MICRO_LOANS,"bureau.csv, bureau_balance.csv & previous_application.csv",total number of currenty active micro-loans the client has with Home Credit or any other lenders,int,None,No,,,,,,,,
+TOTAL_ACTIVE_MORTGAGES,"bureau.csv, bureau_balance.csv & previous_application.csv",total number of currenty active mortgages the client has with Home Credit or any other lenders,int,None,No,,,,,,,,
+TOTAL_ACTIVE_CREDIT_CARDS,"credit_card_balance.csv, bureau.csv & bureau_balance.csv",total number of currenty active credit cards the client has with Home Credit or any other lenders,int,None,No,,,,,,,,
+DEBT_RENEGOCIATIONS,"credit_card_balance.csv, bureau.csv & bureau_balance.csv",total number of credit extensions or unapproved delayed repayments in the client's credit history with Home Credit and other lenders,int,None,No,,,,,,,,
+CLIENT_BAD_CREDIT_HISTORY,"bureau.csv, bureau_balance.csv & previous_application.csv",total number of past credits of the client which were written off or sold as bad debt by the lender,int,None,No,,,,,,,,
+CLIENT_FRAUD_FLAG,previous_application.csv,total number of occurrences a credit declined to the client was flagged as having a documentation or other issue with Home Credit and other lenders,int,None,No,,,,,,,,
+CLIENT_WITHDRAWN_APPLICATIONS,previous_application.csv,total number of applications not processed to approval/refusal because the client withdrew the application with Home Credit or other lenders before a final decision was made,int,None,No,,,,,,,,
+DOWN_PAYMENT_CURR_%,application_{train|test}.csv,estimated % of the down payment to be made by the client for the current credit application,float,None,No,,,,,,,,
+DEBT_RATE_INC_CURR_%,"POS_CASH_balance.csv, credit_card_balance.csv, bureau.csv & bureau_balance.csv  application_{train|test}.csv",total current debt % of client compared to total disposable income for the household (including current application),float,None,No,,,,,,,,
+b_DAYS_CREDIT_CARD_max,bureau.csv & bureau_balance.csv,maximum length of all closed or active credit card credits ever held by the client with other lenders,float,None,No,,,,,,,,
