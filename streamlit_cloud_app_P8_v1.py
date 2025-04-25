@@ -17,6 +17,74 @@ import plotly.graph_objects as go
 import pandas as pd
 import plotly.express as px
 
+# WCAG toggle
+if "accessibility_mode" not in st.session_state:
+    st.session_state.accessibility_mode = False
+
+# Toggle widget to activate accessibility mode
+# st.write("# 🔍 Enable Accessibility Mode 🔍")
+st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> 🔍 Enable Accessibility Mode 🔍 </h1>",
+            unsafe_allow_html=True)
+st.session_state.accessibility_mode = st.toggle(
+    label="     ",
+    value=st.session_state.accessibility_mode,
+    help="# Toggle to switch to high contrast and larger fonts for better accessibility (High Contrast, Larger Fonts, Color-blind Friendly)",
+    key="accessibility_toggle"
+)
+
+if st.session_state.accessibility_mode:
+    # st.write("# Accessibility mode is ON")
+    st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> Accessibility mode is ON </h1>",
+            unsafe_allow_html=True)
+else:
+    # st.write("# Accessibility mode is OFF")
+    st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> Accessibility mode is OFF </h1>",
+            unsafe_allow_html=True)
+
+def set_default_theme():
+    st.markdown(
+        """
+        <style>
+        body {
+            font-size: 16px;
+            color: #000000;
+            background-color: white;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+def set_high_contrast_theme():
+    st.markdown(
+        """
+        <style>
+        body {
+            font-size: 20px !important;
+            color: #FFFFFF !important;
+            background-color: #000000 !important;
+        }
+        /* Example: make all text larger */
+        .stText, .stMarkdown {
+            font-size: 20px !important;
+        }
+        /* Adjust button colors */
+        button {
+            background-color: yellow !important;
+            color: black !important;
+            font-weight: bold;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+if st.session_state.accessibility_mode:
+    set_high_contrast_theme()
+else:
+    set_default_theme()
+
+# Set default background color
 def set_bg_color(color):
     st.markdown(
         f"""

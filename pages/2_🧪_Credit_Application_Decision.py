@@ -8,6 +8,44 @@ import plotly.graph_objects as go
 import pandas as pd
 import plotly.express as px
 
+accessibility_mode = st.session_state.get("accessibility_mode", False)
+
+if accessibility_mode:
+    # Inject high contrast CSS, increase font sizes, etc.
+    st.markdown(
+        """
+        <style>
+        body {
+            background-color: black !important;
+            color: white !important;
+            font-size: 20px !important;
+        }
+        /* Customize buttons, inputs, etc. for high contrast */
+        button, input {
+            background-color: yellow !important;
+            color: black !important;
+            font-weight: bold !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+else:
+    # Default or light theme CSS or no override
+    pass
+
+# For graphs, use color-blind-friendly palettes conditionally
+import plotly.express as px
+
+colorblind_palette = px.colors.qualitative.Safe  # colorblind-friendly palette
+default_palette = px.colors.qualitative.Plotly
+
+palette = colorblind_palette if accessibility_mode else default_palette
+
+
+
+
+
 # Get selected client application id
 selected_value = st.session_state.get("selected_value", None)
 if selected_value is None:
