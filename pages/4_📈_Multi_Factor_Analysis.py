@@ -74,7 +74,7 @@ else:
 
 
 
-st.write("## 👌 Step 3 - Choose fields for client bivariate analysis display:")
+st.write("## 👌 Step 4 - Choose fields for client bivariate analysis display:")
   
 # Create scatter plot
 client_data=pd.read_csv('test_data_final.csv').drop(labels=['Unnamed: 0'], axis=1)
