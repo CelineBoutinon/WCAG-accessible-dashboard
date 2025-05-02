@@ -2,7 +2,7 @@
 
 # To run app locally, navigate to : C:\Users\celin\DS Projets Python\OCDS-repos-all\OCDS-P8-API
 # in the command line and run : py -m streamlit run streamlit_cloud_app_P8_v1.py
-# App runs on Streamlit Community Cloud at <TBD>
+# App runs on Streamlit Community Cloud at https://ocds-p8-dashboard.streamlit.app/
 
 # IMPORTANT: In advanced settings, choose Python 3.10 when deploying the app in Streamlit Community Cloud
 # to avoid errors related to distutils (discontinued from Python 3.12 onwards).
