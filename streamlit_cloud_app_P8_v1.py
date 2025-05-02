@@ -144,8 +144,8 @@ st.write("")
 # --- Fetch API data only if not already fetched for this selected_value ---
 if ("last_fetched_value" not in st.session_state) or (st.session_state.last_fetched_value != selected_value):
     # Make API call
-    # app_response = requests.get(f"https://credit-scoring-api-0p1u.onrender.com/predict/{selected_value}") # web API
-    app_response = requests.get(f"http://127.0.0.1:5000/predict/{selected_value}") # local API
+    app_response = requests.get(f"https://credit-scoring-api-0p1u.onrender.com/predict/{selected_value}") # web API
+    # app_response = requests.get(f"http://127.0.0.1:5000/predict/{selected_value}") # local API
     app_data = app_response.json()
 
     if app_response.status_code == 200:

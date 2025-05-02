@@ -2,7 +2,7 @@
 
 # to run locally, navigate to C:\Users\celin\DS Projets Python\OCDS-repos-all\OCDS-P8-API
 # and launch app by running flask --app app.py run --debug from the command line
-# web app available at <TBD>
+# web app available at https://credit-scoring-api-0p1u.onrender.com
 
 from flask import Flask, jsonify
 from joblib import load
