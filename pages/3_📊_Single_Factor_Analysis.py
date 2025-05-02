@@ -93,7 +93,7 @@ float_cols = ['AMT_CREDIT', 'DISPOSABLE_INCOME', 'DISPOSABLE_INCOME_per_capita',
 
 
 
-st.write("## 🖖 Step 3 - Choose field for client univariate analysis display:")
+st.write("## 👌 Step 3 - Choose field for client univariate analysis display:")
     # Create boxplot
 st.write("### Choose a column for the box plot:")
 box_column = st.selectbox("", float_cols)
