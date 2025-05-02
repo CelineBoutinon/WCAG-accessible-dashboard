@@ -74,8 +74,8 @@ st.image("bandeau.png")
 
 
 # Send a get request to the API using the selected client credit application reference
-# app_response = requests.get(f"https://credit-scoring-api-0p1u.onrender.com/predict/{selected_value}") # web API
-app_response = requests.get(f"http://127.0.0.1:5000/predict/{selected_value}") # local API
+app_response = requests.get(f"https://credit-scoring-api-0p1u.onrender.com/predict/{selected_value}") # web API
+# app_response = requests.get(f"http://127.0.0.1:5000/predict/{selected_value}") # local API
 
 # Import elements from API response separately for graphs
 app_data = app_response.json()
