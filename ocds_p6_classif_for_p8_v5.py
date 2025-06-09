@@ -2152,7 +2152,7 @@ plt.show()
 """
 
 # run cell below first when restarting runtime in Google Colab
-!pip install nlpaug plot_keras_history timm --quiet
+!pip install pytorch-gradcam visualtorch torchviz plot_keras_history timm onnx --quiet
 
 # utilities
 import sys
@@ -2186,24 +2186,9 @@ import plotly.express as px
 from matplotlib.ticker import StrMethodFormatter
 from matplotlib.ticker import FormatStrFormatter
 from plot_keras_history import show_history, plot_history
+import visualtorch
+from torchviz import make_dot
 
-# text processing
-# import re
-# import nltk
-# from nltk.tokenize import word_tokenize, RegexpTokenizer
-# from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-# nltk.download('punkt')
-# nltk.download('punkt_tab')
-# nltk.download('stopwords')
-# nltk.download('wordnet')
-# from nltk.corpus import stopwords
-# from collections import defaultdict
-# from nltk.stem import PorterStemmer, WordNetLemmatizer
-# from collections import Counter
-# from wordcloud import WordCloud
-
-# text augmentation
-# import nlpaug.augmenter.word as naw
 
 # image processing
 import cv2
@@ -2227,30 +2212,32 @@ from sklearn.model_selection import GridSearchCV, StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
-# import lightgbm
-# from lightgbm import LGBMClassifier
-# import xgboost as xgb
-# from xgboost import XGBClassifier
-# import umap
+from functools import partial
 import tensorflow as tf
 from tensorflow.keras.models import Model, Sequential
 from tensorflow.keras.layers import GlobalAveragePooling2D, GlobalAveragePooling1D, Flatten, Dense, Dropout
 from tensorflow.keras.layers import Rescaling, RandomFlip, RandomRotation, RandomZoom
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-# from tensorflow.keras.applications.vgg16 import VGG16
-# from tensorflow.keras.applications.vgg16 import preprocess_input
-# from tensorflow.keras.applications.vgg19 import VGG19
-# from tensorflow.keras.applications.vgg19 import preprocess_input
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 from tensorflow.keras.utils import to_categorical
-# from tensorflow.keras.applications.resnet50 import ResNet50, preprocess_input
-# from tensorflow.keras.applications import Xception, InceptionV3
-# from tensorflow.keras.applications.xception import preprocess_input as xception_preprocess
-# from tensorflow.keras.applications.inception_v3 import preprocess_input as inception_preprocess
+
+from torch.utils.data import Dataset
+import torch
+from torchvision import transforms
+from torch.utils.data import DataLoader
+import timm
+import torch.nn as nn
+import torch.optim as optim
+from sklearn.metrics import classification_report
+import torch
+from gradcam import GradCAM
+from gradcam.utils import visualize_cam
+
 
 # metrics
 from sklearn import metrics
 from sklearn.metrics import confusion_matrix, accuracy_score, f1_score, make_scorer, fbeta_score, precision_score, recall_score
+import shap
 
 # set dataframe display options
 pd.set_option('max_colwidth', None)
@@ -2285,16 +2272,8 @@ palette = ['#440154', '#481e70', '#443982', '#3a528b', '#30678d', '#287b8e', '#2
            "#FF5722", "#FF3D00", "#FF2D00", "#E53935", "#D32F2F", "#C62828", "#B71C1C", "#FF5252", "#FF1744", "#FF4081",
            "#F50057", "#D5006D", "#C51162"]
 
-from torch.utils.data import Dataset
-import torch
-from torchvision import transforms
-from torch.utils.data import DataLoader
-import timm
-import torch.nn as nn
-import torch.optim as optim
-from sklearn.metrics import classification_report
-
-import shap
+import gradcam.utils
+print(dir(gradcam.utils))
 
 # run this cell in Google Colab only
 from google.colab import drive
@@ -2318,7 +2297,10 @@ print(test_df.shape)
 
 list_labels=['0', '1', '2', '3', '4', '5', '6']
 
-
+# initialise random state for all models and transformers
+rs_list = [8, 13, 42]
+rs = rs_list[random.randrange(len(rs_list))]
+print("Random state =", rs)
 
 """## 4.1 - Create image sets"""
 
@@ -2399,8 +2381,6 @@ train_val_loader = DataLoader(train_val_dataset, batch_size=batch_size, shuffle=
 
 
 
-
-
 """## 4.4 - Instanciate model"""
 
 # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -2424,6 +2404,7 @@ model.to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=1e-4)
 
+# ensure SHAP compatibility
 print("In-place ReLUs remaining:",
       sum(1 for m in model.modules()
           if isinstance(m, nn.ReLU) and m.inplace))  # Should output 0
@@ -2733,18 +2714,11 @@ plt.show()
 
 
 
-
-
 """## 4.7 - Feature importance"""
 
 rs=13
 
 """### 4.7.1 - Global feature importance"""
-
-import os
-from PIL import Image
-import numpy as np
-import torch
 
 # Path to your images
 background_images_dir = '/content/drive/My Drive/Colab Notebooks/OCDS_P6&P8/flipkart_images'
@@ -2764,8 +2738,7 @@ def preprocess_image(image_path):
 background_images = torch.tensor(np.stack([preprocess_image(p) for p in background_image_files]), dtype=torch.float32)  # (N, 3, 224, 224)
 test_images_subset = torch.tensor(np.stack([preprocess_image(p) for p in test_image_files]), dtype=torch.float32)  # (M, 3, 224, 224)
 
-from functools import partial
-
+# ensure SHAP compatibility
 def replace_silu_inplace(module):
     for name, child in module.named_children():
         if isinstance(child, nn.SiLU) and child.inplace:
@@ -2775,266 +2748,50 @@ def replace_silu_inplace(module):
 # Apply to your model
 replace_silu_inplace(model)
 
-"""# optimized code"""
-
-import torch
-import numpy as np
-import shap
-
 # Reduce background and test samples
 background_images = background_images[:10]  # Use only 10 images
 test_images_subset = test_images_subset[:5]  # Use only 5 images
 
 # Optionally, resize images for SHAP analysis (not for training)
-background_images_small = torch.nn.functional.interpolate(
-    background_images, size=(112, 112), mode='bilinear'
-)
-test_images_subset_small = torch.nn.functional.interpolate(
-    test_images_subset, size=(112, 112), mode='bilinear'
-)
+background_images_small = torch.nn.functional.interpolate(background_images, size=(112, 112), mode='bilinear')
+test_images_subset_small = torch.nn.functional.interpolate(test_images_subset, size=(112, 112), mode='bilinear')
 
 # Flatten for KernelExplainer
 background_flat = background_images_small.cpu().numpy().reshape(len(background_images_small), -1)
 test_flat = test_images_subset_small.cpu().numpy().reshape(len(test_images_subset_small), -1)
 
 def predict_fn(images_flat):
-    images = torch.tensor(
-        images_flat.reshape(-1, 3, 112, 112), dtype=torch.float32
-    ).to(device)
+    images = torch.tensor(images_flat.reshape(-1, 3, 112, 112), dtype=torch.float32).to(device)
     with torch.no_grad():
         outputs = model(images)
         probabilities = torch.nn.functional.softmax(outputs, dim=1)
     return probabilities.cpu().numpy()
 
 explainer = shap.KernelExplainer(predict_fn, background_flat)
-
 shap_values = explainer.shap_values(test_flat, nsamples=100)  # Lower nsamples for speed
 
-shap.summary_plot(
-    shap_values,
-    test_flat,
-    plot_type="bar",
-    feature_names=[f"Pixel_{i}" for i in range(test_flat.shape[1])],
-    class_names=list_labels
-)
+shap.summary_plot(shap_values, test_flat, plot_type="bar", feature_names=[f"Pixel_{i}" for i in range(test_flat.shape[1])], class_names=list_labels)
+plt.savefig(save_path + '/' + 'SHAP values MobileViTv2.png', bbox_inches='tight')
+plt.show()
 
-import shap
-import torch
 
-# Ensure model and background images are on the same device
-model.to(device)
-model.eval()
-background_images = background_images.to(device)
-test_images = test_images.to(device)
 
-# Create DeepExplainer
-explainer = shap.DeepExplainer(model, background_images)
+"""### 4.7.2 - Local feature importance with SHAP"""
 
-# Compute SHAP values for test images
-shap_values = explainer.shap_values(test_images)
-
-shap.summary_plot(
-    shap_values,
-    test_flat,
-    plot_type="bar",
-    feature_names=[f"Pixel_{i}" for i in range(test_flat.shape[1])],
-    class_names=list_labels
-)
-
-
-
-
-
-
-
-
-
-
-
-
-
-import shap
-
-# Make sure your model is on the right device and in eval mode
-model.to(device)
-model.eval()
-
-# Move images to device
-background_images = background_images.to(device)
-test_images_subset = test_images_subset.to(device)
-
-# Create SHAP DeepExplainer and compute SHAP values
-explainer = shap.DeepExplainer(model, background_images)
-shap_values = explainer.shap_values(test_images_subset)
-
-# Plot global feature importance
-shap.summary_plot(
-    shap_values,
-    np.transpose(test_images_subset.cpu().numpy(), (0, 2, 3, 1)),  # (N, H, W, C)
-    plot_type="bar",
-    class_names=list_labels  # e.g., ['Class_0', ..., 'Class_6']
-)
-
-# 1. SHAP Summary Plot (Global Feature Importance)
-
-
-
-# Use DeepExplainer (optimized for CNNs)
-explainer = shap.DeepExplainer(model, background_images.to(device))  # Background: 50-100 images
-shap_values = explainer.shap_values(test_images_subset.to(device))   # Test subset: ~100 images
-
-# Summary plot for global importance (aggregates absolute SHAP values)
-shap.summary_plot(
-    shap_values,
-    np.transpose(test_images_subset.cpu().numpy(), (0, 2, 3, 1)),  # Shape: (N, H, W, C)
-    plot_type="bar",  # Shows mean |SHAP| per feature
-    class_names=list_labels  # Your 7 class names
-)
-
-# 2. Mean Absolute SHAP Values
-
-# For multiclass: Average across all classes and samples
-mean_shap = np.mean([np.abs(shap_values[i]) for i in range(7)], axis=(0, 1))
-
-# Reshape to image dimensions (H, W, C)
-mean_shap_image = mean_shap.reshape(224, 224, 3)
-
-# Plot heatmap
-shap.image_plot([mean_shap_image], [np.transpose(test_images_subset[0].cpu().numpy(), (1, 2, 0))])
-
-# 3. Class-Specific Global Importance
-for class_idx in range(7):
-    class_shap = np.mean(np.abs(shap_values[class_idx]), axis=0)
-    class_shap_image = class_shap.reshape(224, 224, 3)
-
-    shap.image_plot(
-        [class_shap_image],
-        [np.transpose(test_images_subset[0].cpu().numpy(), (1, 2, 0))],
-        titles=[f"Class {list_labels[class_idx]} Importance"]
-    )
-
-# 4. Superpixel-Based Aggregation
-from skimage.segmentation import slic
-
-# Compute superpixels for an example image
-image = test_images_subset[0].cpu().numpy().transpose(1, 2, 0)
-segments = slic(image, n_segments=50, compactness=10)
-
-# Aggregate SHAP values per superpixel
-superpixel_shap = np.zeros(segments.max() + 1)
-for i in np.unique(segments):
-    superpixel_shap[i] = np.mean(mean_shap_image[segments == i])
-
-# Visualize
-shap.image_plot(
-    [segments],
-    [image],
-    np.expand_dims(superpixel_shap, axis=0)
-)
-
-
-
-
-
-
-
-"""The error  
-```
-AttributeError: 'KernelExplainer' object has no attribute 'shap_interaction_values'
-```
-occurs because **SHAP KernelExplainer does not support `.shap_interaction_values`**. This feature is only available for certain explainers, primarily `TreeExplainer` (for tree-based models like XGBoost, LightGBM, etc.)[2][3][6][7]. Currently, neither `KernelExplainer` nor `DeepExplainer` supports direct computation of SHAP interaction values for deep learning models such as MobileViTv2[2][5].
-
----
-
-## **What does this mean for your MobileViTv2 workflow?**
-
-- **You cannot use `shap_interaction_values` with KernelExplainer or DeepExplainer.**
-- The type of plot you showed (SHAP interaction value summary plot) is only natively supported for tree models using `TreeExplainer`.
-- For deep learning models (like MobileViTv2), only standard SHAP values (main effects) are supported out-of-the-box with `KernelExplainer` and `DeepExplainer`.
-
----
-
-## **What can you do instead?**
-
-### 1. **Standard SHAP Value Analysis**
-You can still compute and visualize standard SHAP values (feature attributions) for your images using `explainer.shap_values` and plots like `shap.summary_plot` or `shap.image_plot`.
-
-### 2. **Manual Approximation (Advanced)**
-If you truly need interaction values for a deep model, you would have to implement a custom approximation, which is non-trivial and not supported by the SHAP API[4][5]. There is no official workaround in the SHAP library as of now.
-
-### 3. **Alternative Libraries**
-Some research libraries (e.g., [shapiq](https://christophm.github.io/interpretable-ml-book/shap.html)) are exploring more general interaction value estimation, but these are not yet mainstream or as plug-and-play as SHAP for tree models[4].
-
----
-
-## **Summary Table**
-
-| SHAP Explainer         | SHAP Values Supported | SHAP Interaction Values Supported |
-|------------------------|----------------------|-----------------------------------|
-| TreeExplainer          | Yes                  | Yes                               |
-| KernelExplainer        | Yes                  | **No**                            |
-| DeepExplainer          | Yes                  | **No**                            |
-
----
-
-## **References**
-- [2] GitHub Issue: KernelExplainer does not support shap_interaction_values
-- [3] SHAP documentation: Interaction values for tree models
-- [4] Interpretable ML Book: SHAP interactions
-- [5] GitHub Issue: DeepExplainer does not support shap_interaction_values
-- [6][7] SHAP documentation, TreeExplainer
-
----
-
-**In summary:**  
-You cannot generate SHAP interaction value plots for MobileViTv2 using KernelExplainer or DeepExplainer. You can only use standard SHAP value plots for deep learning models. Interaction value plots are only supported for tree-based models with TreeExplainer.
-
-[1] https://pplx-res.cloudinary.com/image/private/user_uploads/31737542/22867266-f893-48c7-89e3-511fd79a66a2/shap_interaction_values.jpg
-[2] https://github.com/slundberg/shap/issues/2579
-[3] https://github.com/shap/shap
-[4] https://christophm.github.io/interpretable-ml-book/shap.html
-[5] https://github.com/slundberg/shap/issues/272
-[6] https://shap.readthedocs.io/en/latest/example_notebooks/tabular_examples/tree_based_models/Basic%20SHAP%20Interaction%20Value%20Example%20in%20XGBoost.html
-[7] https://shap.readthedocs.io/en/latest/generated/shap.TreeExplainer.html
-[8] https://github.com/slundberg/shap/issues/136
-[9] https://pypi.org/project/shap/
-[10] https://www.kaggle.com/code/bextuychiev/model-explainability-with-shap-only-guide-u-need
-[11] https://shap.readthedocs.io/en/latest/example_notebooks/overviews/An%20introduction%20to%20explainable%20AI%20with%20Shapley%20values.html
-[12] https://stackoverflow.com/questions/71861157/shap-kernelexplainer-attributeerror-numpy-ndarray
-[13] https://shap.readthedocs.io/en/latest/generated/shap.GPUTreeExplainer.html
-[14] https://towardsdatascience.com/kernelshap-can-be-misleading-with-correlated-predictors-9f64108f7cfb/
-[15] https://docs.seldon.io/projects/alibi/en/latest/api/alibi.explainers.shap_wrappers.html
-[16] https://shap.readthedocs.io/en/latest/generated/shap.KernelExplainer.html
-[17] https://www.datacamp.com/tutorial/introduction-to-shap-values-machine-learning-interpretability
-[18] https://stackoverflow.com/questions/75275838/r-how-to-calculate-and-plot-shap-interaction-values
-[19] https://huggingface.co/docs/transformers/main/model_doc/mobilevitv2
-"""
-
-
-
-
-
-
-
-"""### 4.7.2 - Local feature importance
-
-use image f4d4c2eec77732f56e47722d7a355f2b.jpg ligne 97 from Class 3 - Home Decor & Festive Needs
-"""
-
-# --- Configuration ---
+# 1. Configuration
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 image_path = '/content/drive/My Drive/Colab Notebooks/OCDS_P6&P8/flipkart_images/f4d4c2eec77732f56e47722d7a355f2b.jpg'
 
-# --- Load image in OpenCV-compatible format (H, W, C) ---
+# 2. Load image in OpenCV-compatible format (H, W, C)
 def preprocess_image_for_shap(image_path):
     image = Image.open(image_path).convert("RGB")
     image = image.resize((224, 224))
-    image_np = np.array(image)  # Shape: (224, 224, 3), dtype=uint8
-    return np.expand_dims(image_np, axis=0)  # Add batch dim: (1, 224, 224, 3)
+    image_np = np.array(image)
+    return np.expand_dims(image_np, axis=0)
 
-img = preprocess_image_for_shap(image_path)  # Shape: (1, 224, 224, 3)
+img = preprocess_image_for_shap(image_path)
 
-# --- Define prediction function ---
+# 3. Define prediction function
 def predict_fn(images_numpy):
     # Input shape: (N, H, W, 3) in [0,255]
     # Convert to (N, C, H, W) and normalize for model
@@ -3047,24 +2804,171 @@ def predict_fn(images_numpy):
         probabilities = torch.nn.functional.softmax(logits, dim=1)
     return probabilities.cpu().numpy()
 
-# --- Configure SHAP masker ---
+# 4. Configure SHAP masker
 masker = shap.maskers.Image("inpaint_telea", img.shape[1:])  # (224, 224, 3)
 
-# --- Create SHAP explainer ---
+# 5. Create SHAP explainer
 list_labels = [f'Class_{i}' for i in range(7)]
 explainer = shap.Explainer(predict_fn, masker, output_names=list_labels)
 
-# --- Compute SHAP values ---
+# 6. Compute SHAP values
 print("Computing SHAP values...")
-shap_values = explainer(
-    img,
-    max_evals=500,  # Reduce if memory-constrained
-    batch_size=25,
-    outputs=shap.Explanation.argsort.flip[:1]
-)
+shap_values = explainer(img, max_evals=500, batch_size=25, outputs=shap.Explanation.argsort.flip[:1])
 
-# --- Visualize ---
+# 7. Visualize & save
 plt.figure(figsize=(10,10))
 shap.image_plot(shap_values, img)
 plt.savefig(save_path + '/' + 'SHAP values buddha - MobileViTv2.png', bbox_inches='tight')
 plt.show()
+
+
+
+
+
+
+
+"""### 4.7.3 - Local feature importance with GradCAM"""
+
+# 1. Load and preprocess the image
+image_path = '/content/drive/My Drive/Colab Notebooks/OCDS_P6&P8/flipkart_images/f4d4c2eec77732f56e47722d7a355f2b.jpg'
+image = Image.open(image_path).convert("RGB")
+transform = transforms.Compose([
+    transforms.Resize((256, 256)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+])
+input_tensor = transform(image).unsqueeze(0).to(device)
+
+# 2. Set the target layer (last MobileVitV2Block)
+target_layer = model.stages[4][1] # see https://github.com/jacobgil/pytorch-grad-cam for layer choices for pytorch models
+# here model is loaded with timm, use print(model) to find correct model layer
+
+# 3. Forward pass to get predicted class
+model.eval()
+with torch.no_grad():
+    outputs = model(input_tensor)
+    class_idx = outputs.argmax(dim=1).item()
+
+# 4. GradCAM setup
+cam = GradCAM(model, target_layer)
+
+# 5. Run GradCAM (pass input tensor and class index)
+grayscale_cam = cam(input_tensor, class_idx)[0]
+
+# 6. Unnormalize image for visualization (convert back to [0,1] range)
+rgb_img = input_tensor.squeeze().cpu().numpy().transpose(1, 2, 0)
+rgb_img = (rgb_img * np.array([0.229, 0.224, 0.225])) + np.array([0.485, 0.456, 0.406])
+rgb_img = np.clip(rgb_img, 0, 1)
+
+# 7. Convert both grayscale_cam and rgb_img to torch tensors for visualize_cam
+grayscale_cam_tensor = torch.tensor(grayscale_cam).unsqueeze(0).float()
+rgb_img_tensor = torch.tensor(rgb_img).permute(2, 0, 1).unsqueeze(0).float()
+
+# 8. Overlay heatmap using visualize_cam
+heatmap, result = visualize_cam(grayscale_cam_tensor, rgb_img_tensor)
+
+# 9. Convert result back to numpy for plotting
+result_np = result.squeeze().permute(1, 2, 0).numpy()
+result_np = np.clip(result_np, 0, 1)
+
+# 10. Display
+plt.imshow(result_np)
+plt.axis('off')
+plt.savefig(save_path + '/'+ 'hot_buddha.png')
+plt.show()
+
+"""Source : chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://openaccess.thecvf.com/content_ICCV_2017/papers/Selvaraju_Grad-CAM_Visual_Explanations_ICCV_2017_paper.pdf"""
+
+
+
+"""## 4.8 - Export model info for layers graph
+
+### 4.8.1 - onnx file for netron.app
+"""
+
+onnx_path = "/content/drive/My Drive/Colab Notebooks/OCDS_P6&P8/mobilevitv2.onnx"
+
+# 1. Set device (CPU or CUDA)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# 2. Move your model to the correct device and set to eval mode
+model = model.to(device)
+model.eval()
+
+# 3. Create a dummy input with the correct shape and device
+# Your model expects (batch_size, 3, 256, 256) images
+dummy_input = torch.randn(1, 3, 256, 256, device=device)
+
+# 4. (Optional but recommended) Run a forward pass once to initialize BatchNorm stats
+with torch.no_grad():
+    _ = model(dummy_input)
+
+# 5. Export to ONNX
+torch.onnx.export(
+    model,
+    dummy_input,
+    onnx_path,
+    export_params=True,
+    opset_version=13,  # You can use a different opset if needed
+    do_constant_folding=True,
+    input_names=['input'],
+    output_names=['output'],
+    dynamic_axes={'input': {0: 'batch_size'}, 'output': {0: 'batch_size'}}
+)
+
+print("Exported model to mobilevitv2.onnx")
+
+"""**Upload onnx file to https://netron.app/ to save as png or svg file.**"""
+
+
+
+"""### 4.8.2 - With visualtorch
+
+**- With matplotlib:**
+"""
+
+# Create a CPU copy of the model
+model_cpu = model.cpu()
+
+# Move model to CPU for visualization
+model_cpu = model.cpu()
+
+# Generate the architecture visualization
+img = visualtorch.layered_view(model_cpu, input_shape=(1, 3, 256, 256))
+
+# Make the output larger and more readable
+plt.figure(figsize=(20, 20))  # You can adjust (width, height) as needed
+plt.axis("off")
+plt.tight_layout()
+plt.imshow(img)
+plt.show()
+
+
+
+"""**- With plotly express:**"""
+
+# Move model to CPU for visualization
+model_cpu = model.cpu()
+
+# Generate the architecture visualization (PIL Image or numpy array)
+img = visualtorch.layered_view(model_cpu, input_shape=(1, 3, 256, 256))
+if hasattr(img, 'convert'):
+    img_rgb = np.array(img.convert("RGB"))
+else:
+    img_rgb = img
+
+fig = px.imshow(img_rgb)
+fig.update_layout(width=1200, height=100, margin=dict(l=10, r=10, b=10, t=10))
+fig.update_xaxes(showticklabels=False)
+fig.update_yaxes(showticklabels=False)
+fig.write_html("/content/drive/My Drive/Colab Notebooks/OCDS_P6&P8/model_diagram.html")
+fig.show()
+
+"""### 4.8.3 - With torchviz"""
+
+dummy_input = torch.randn(1, 3, 256, 256)
+output = model(dummy_input)
+dot = make_dot(output, params=dict(model.named_parameters()))
+dot.format = 'png'
+dot.render("/content/drive/My Drive/Colab Notebooks/OCDS_P6&P8/mobilevitv2_graph")
+
