@@ -1,6 +1,6 @@
 # !!! THIS IS THE OCDS P8 APP !!!
 
-# to run locally, navigate to C:\Users\celin\DS Projets Python\OCDS-repos-all\OCDS-P8-API
+# to run API locally, navigate to C:\Users\celin\DS Projets Python\OCDS-repos-all\OCDS-P8-API
 # and launch app by running flask --app app.py run --debug from the command line
 # web app available at https://credit-scoring-api-0p1u.onrender.com
 
@@ -55,7 +55,7 @@ model = load('final_model.joblib')
 custom_threshold = load('optimal_threshold.joblib')
 
 # Add a descriptive alt text for the banner image (WCAG 1.1.1)
-st.image("bandeau.png", caption="Logo Home Credit - Credit Scoring Application", use_column_width=True)
+st.image("bandeau.png", caption="Logo Home Credit - Credit Scoring Application", use_container_width=True)
 
 
 @app.route('/', methods=['GET'])
@@ -65,23 +65,6 @@ def home():
     <p>- use /predict/ID to retrieve client credit application decision</p>
     <p>where ID is the client's unique Home Credit application number (whole number between 1 and 48745)</p>'''
 
-    st.title("Credit Scoring Application")
-    st.markdown("""
-    Welcome to the Home Credit Credit Scoring app.
-
-    - Use the sidebar to navigate between pages.
-    - Accessibility mode is available for users with visual impairments.
-    """)
-
-    # Example: Add a button to toggle accessibility mode
-    if st.button("Toggle Accessibility Mode"):
-        st.session_state["accessibility_mode"] = not accessibility_mode
-        st.experimental_rerun()
-
-    # Add instructions for keyboard navigation (optional, helps accessibility)
-    st.markdown("""
-    **Tip:** You can use the `Tab` key to navigate between interactive elements.
-    """)
 
 
  

@@ -1,3 +1,10 @@
+# # !!! THIS IS THE OCDS P8 APP !!!
+
+# to run Streamlit App locally, navigate to C:\Users\celin\DS Projets Python\OCDS-repos-all\OCDS-P8-API
+# and launch app by running streamlit run app.py
+# web app available at https://ocds-p8-dashboard.streamlit.app/
+
+
 import streamlit as st
 import requests
 import json
@@ -8,19 +15,37 @@ import plotly.graph_objects as go
 import pandas as pd
 import plotly.express as px
 
-# --- WCAG: Set unique and descriptive page title (2.4.2) ---
+# --- WCAG: Set unique and descriptive browser tab title (2.4.2) ---
 st.set_page_config(
     page_title="Credit Scoring App - Home",
     page_icon="🏠",
     layout="wide"
 )
 
+st.session_state.accessibility_mode = st.toggle(
+    label="r'''$\textsf{\Huge Text \huge accessibility_toggle  }$'''",
+    value=st.session_state.accessibility_mode,
+    help="# Toggle to switch to high contrast and larger fonts for better accessibility (High Contrast, Larger Fonts, Color-blind Friendly)",
+    key="accessibility_toggle"
+)
+
 # --- WCAG: Accessibility toggle ---
 if "accessibility_mode" not in st.session_state:
     st.session_state.accessibility_mode = False
 
-st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> 🔍 Enable Accessibility Mode 🔍 </h1>",
-            unsafe_allow_html=True)
+if st.session_state.accessibility_mode:
+    label = r'''
+    $\textsf{
+        \Huge Text \huge Text \LARGE Text \Large Text 
+        \large Text \normalsize Text \small Text 
+        \footnotesize Text \scriptsize Text \tiny Text 
+    }$
+    '''
+    st.text_input(label)
+
+else:
+    st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> 🔍 Enable Accessibility Mode 🔍 </h1>",
+                unsafe_allow_html=True)
 
 st.markdown(
     """
@@ -40,8 +65,8 @@ st.markdown(
     /* Make the help/description text larger */
     .stTooltipContent {
         font-size: 1.3em !important;
-    }
-    /* Increase spacing for clarity */
+     }
+     /* Increase spacing for clarity */
     [data-testid="stToggle"] {
         margin-bottom: 1.5em;
     }
@@ -50,12 +75,7 @@ st.markdown(
     unsafe_allow_html=True
 ) 
 
-st.session_state.accessibility_mode = st.toggle(
-    label="     ",
-    value=st.session_state.accessibility_mode,
-    help="# Toggle to switch to high contrast and larger fonts for better accessibility (High Contrast, Larger Fonts, Color-blind Friendly)",
-    key="accessibility_toggle"
-)
+
 
 def set_default_theme():
     st.markdown(
