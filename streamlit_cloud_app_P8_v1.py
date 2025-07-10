@@ -15,11 +15,9 @@ import plotly.graph_objects as go
 import pandas as pd
 import plotly.express as px
 
-
-# --- WCAG: Accessibility toggle ---
+# --- Accessibility toggle (WCAG 1.4.1, 1.4.3 & 1.4.4)---
 if "accessibility_mode" not in st.session_state:
     st.session_state.accessibility_mode = False
-
 
 # --- WCAG: Set unique and descriptive browser tab title (2.4.2) ---
 st.set_page_config(
@@ -28,58 +26,43 @@ st.set_page_config(
     layout="wide"
 )
 
+# st.markdown("# Accessibility Toggle")  # Large label above the toggle
 st.session_state.accessibility_mode = st.toggle(
-    label="r'''$\textsf{\Huge Text \huge accessibility_toggle  }$'''",
+    label="Accessibility Toggle - click here to enable high-contrast, larger fonts & colorblind-friendly color scheme",
     value=st.session_state.accessibility_mode,
-    help="# Toggle to switch to high contrast and larger fonts for better accessibility (High Contrast, Larger Fonts, Color-blind Friendly)",
+    help="Toggle to switch to high contrast and larger fonts for better accessibility (High Contrast, Larger Fonts," \
+    " Color-blind Friendly)",
     key="accessibility_toggle"
 )
 
-# --- WCAG: Accessibility toggle ---
-if "accessibility_mode" not in st.session_state:
-    st.session_state.accessibility_mode = False
-
-if st.session_state.accessibility_mode:
-    label = r'''
-    $\textsf{
-        \Huge Text \huge Text \LARGE Text \Large Text 
-        \large Text \normalsize Text \small Text 
-        \footnotesize Text \scriptsize Text \tiny Text 
-    }$
-    '''
-    st.text_input(label)
-
+if not st.session_state.accessibility_mode:
+    st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> 🔍 Click toggle on top left of page" \
+    " to enable Accessibility Mode 🔍 </h1>",
+                    unsafe_allow_html=True)
 else:
-    st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> 🔍 Enable Accessibility Mode 🔍 </h1>",
-                unsafe_allow_html=True)
+    st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:1em;'> 🔍 Click toggle on top left of page" \
+    " to disable Accessibility Mode 🔍 </h1>",
+                    unsafe_allow_html=True) 
 
-st.markdown(
-    """
-    <style>
-    /* Make the toggle (checkbox) larger */
-    [data-testid="stToggle"] label {
-        font-size: 1.5em !important;
-        min-height: 48px;
-        display: flex;
-        align-items: center;
-    }
-    [data-testid="stToggle"] input[type="checkbox"] {
-        width: 2em;
-        height: 2em;
-        margin-right: 1em;
-    }
-    /* Make the help/description text larger */
-    .stTooltipContent {
-        font-size: 1.3em !important;
-     }
-     /* Increase spacing for clarity */
-    [data-testid="stToggle"] {
-        margin-bottom: 1.5em;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-) 
+# --- WCAG: Accessibility toggle ---
+# if "accessibility_mode" not in st.session_state:
+#     st.session_state.accessibility_mode = False
+
+# if not st.session_state.accessibility_mode:
+#     label = r'''
+#     $\textsf{
+#         \Huge Text \huge Text \LARGE Text \Large Text 
+#         \large Text \normalsize Text \small Text 
+#         \footnotesize Text \scriptsize Text \tiny Text 
+#     }$
+#     '''
+#     st.text_input(label)
+
+# else:
+#     st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> 🔍 Click here to enable Accessibility Mode 🔍 </h1>",
+#                 unsafe_allow_html=True)
+
+
 
 
 
@@ -121,14 +104,14 @@ def set_high_contrast_theme():
 
 if st.session_state.accessibility_mode:
     set_high_contrast_theme()
-    st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> Accessibility mode is ON </h1>",
-                unsafe_allow_html=True)
+#     st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> Accessibility mode is ON </h1>",
+#                unsafe_allow_html=True)
 else:
     set_default_theme()
-    st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> Accessibility mode is OFF </h1>",
-                unsafe_allow_html=True)
+#     st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> Accessibility mode is OFF </h1>",
+#                 unsafe_allow_html=True)
 
-# --- WCAG: Set default background color ---
+# --- Set default background color (WCAG 1.4.1) ---
 def set_bg_color(color):
     st.markdown(
         f"""
@@ -143,34 +126,61 @@ def set_bg_color(color):
 
 set_bg_color('#fbf0ef')  # light pink
 
-# --- Display title & company logo with alt text (1.1.1) ---
-st.markdown("<h1 style='color:#242164; text-align:center; font-family:Walbaum Heading; font-size:3em;'> Welcome to the </h1>",
-            unsafe_allow_html=True)
-st.image("logo_streamlit.png", caption="Logo: Credit Scoring App", use_container_width=True)  # Added alt text via caption
-st.markdown("<h1 style='color:#242164; text-align:center; font-family:Walbaum Heading; font-size:3em;'> Credit Scoring App! </h1>",
-            unsafe_allow_html=True)
-st.write("")
-st.write("")
-st.write("")
+# --- Display title & company logo with alt text (WCAG 1.1.1) ---
+if st.session_state.accessibility_mode:
+    st.markdown("<h1 style='color:#242164; text-align:center; font-family:Walbaum Heading; font-size:4em;'> Welcome to the </h1>",
+                unsafe_allow_html=True)
+    st.image("logo_streamlit.png", caption="Company Logo: Prêt à Dépenser", use_container_width=True)  # Added alt text via caption
+    st.markdown("<h1 style='color:#242164; text-align:center; font-family:Walbaum Heading; font-size:4em;'> Credit Scoring App! </h1>",
+                unsafe_allow_html=True)
+    st.write("# You can toggle between the Home page and the 4 pages of this app with TAB + ENTER")
+    st.write("")
+    st.write("")
+
+else:
+    st.markdown("<h1 style='color:#242164; text-align:center; font-family:Walbaum Heading; font-size:2em;'> Welcome to the </h1>",
+                unsafe_allow_html=True)
+    st.image("logo_streamlit.png", use_container_width=False)  # Added alt text via caption
+    st.markdown("<h1 style='color:#242164; text-align:center; font-family:Walbaum Heading; font-size:2em;'> Credit Scoring App! </h1>",
+                unsafe_allow_html=True)
+    st.write("")
+    st.write("")
+    st.write("")
+
 
 # --- Step 1: Get user to select client credit application reference ---
-st.write("## ☝️ Step 1 - Enter a client credit application reference:")
-if "selected_value" not in st.session_state:
-    st.session_state.selected_value = 1  # default value
+if st.session_state.accessibility_mode:
+    st.write("# ☝️ Step 1 - Enter a client credit application reference:")
+    if "selected_value" not in st.session_state:
+        st.session_state.selected_value = 1  # default value
+    st.session_state.selected_value = st.number_input(
+        label="",
+        min_value=1,
+        max_value=48745,
+        value=st.session_state.selected_value,
+        key="selected_value_input"
+    )
+    selected_value = st.session_state.selected_value
+    st.write(f"# You selected client application: {selected_value}")
+    st.write("")
+    st.write("")
 
-st.session_state.selected_value = st.number_input(
-    "Enter client credit application reference:",
-    min_value=1,
-    max_value=48745,
-    value=st.session_state.selected_value,
-    key="selected_value_input"
-)
+else:
+    st.write("### ☝️ Step 1 - Enter a client credit application reference:")
+    if "selected_value" not in st.session_state:
+        st.session_state.selected_value = 1  # default value
+    st.session_state.selected_value = st.number_input(
+        label="",
+        min_value=1,
+        max_value=48745,
+        value=st.session_state.selected_value,
+        key="selected_value_input"
+    )
+    selected_value = st.session_state.selected_value
+    st.write(f"### You selected client application: {selected_value}")
+    st.write("")
+    st.write("")
 
-selected_value = st.session_state.selected_value
-
-st.write(f"### You selected client application: {selected_value}")
-st.write("")
-st.write("")
 
 # --- Fetch API data only if not already fetched for this selected_value ---
 if ("last_fetched_value" not in st.session_state) or (st.session_state.last_fetched_value != selected_value):

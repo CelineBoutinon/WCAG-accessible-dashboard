@@ -9,41 +9,10 @@ from joblib import load
 import pandas as pd
 import streamlit as st
 
-app = Flask(__name__)
-
-# --- WCAG: Set unique and descriptive page title (2.4.2) ---
-st.set_page_config(
-    page_title="Credit Scoring App - Home",
-    page_icon="🏠",
-    layout="wide"
-)
-
-st.title("🏠 Credit Scoring App - Home")
-
 # Accessibility mode
 accessibility_mode = st.session_state.get("accessibility_mode", False)
 
-if accessibility_mode:
-    st.markdown(
-        """
-        <style>
-        body {
-            background-color: black !important;
-            color: white !important;
-            font-size: 20px !important;
-        }
-        button, input {
-            background-color: yellow !important;
-            color: black !important;
-            font-weight: bold !important;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-else:
-    # Default or light theme CSS or no override
-    pass
+app = Flask(__name__)
 
 # Load client test data
 client_data=pd.read_csv('test_data_final.csv').drop(labels=['Unnamed: 0'], axis=1)
@@ -54,9 +23,6 @@ model = load('final_model.joblib')
 # Load custom threshold
 custom_threshold = load('optimal_threshold.joblib')
 
-# Add a descriptive alt text for the banner image (WCAG 1.1.1)
-st.image("bandeau.png", caption="Logo Home Credit - Credit Scoring Application", use_container_width=True)
-
 
 @app.route('/', methods=['GET'])
 def home():
@@ -64,8 +30,6 @@ def home():
     <p>Welcome to the HOME CREDIT Credit Scoring app.</p>
     <p>- use /predict/ID to retrieve client credit application decision</p>
     <p>where ID is the client's unique Home Credit application number (whole number between 1 and 48745)</p>'''
-
-
 
  
 @app.route("/predict/<int:id>", methods=['GET'])

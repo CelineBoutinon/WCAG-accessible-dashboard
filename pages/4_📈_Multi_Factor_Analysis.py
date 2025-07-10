@@ -43,7 +43,10 @@ default_palette = px.colors.qualitative.Plotly
 
 palette = colorblind_palette if accessibility_mode else default_palette
 
-
+if st.session_state.accessibility_mode:
+    st.image("bandeau.png", caption="Company Logo: Prêt à Dépenser", use_container_width=True)  # Added alt text via caption
+else:
+    st.image("bandeau.png", use_container_width=False)
 
 # Get selected client application id
 selected_value = st.session_state.get("selected_value", None)

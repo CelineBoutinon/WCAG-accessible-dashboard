@@ -36,22 +36,27 @@ else:
     pass
 
 # For graphs, use color-blind-friendly palettes conditionally
-import plotly.express as px
-
 colorblind_palette = px.colors.qualitative.Safe  # colorblind-friendly palette
-default_palette = px.colors.qualitative.Plotly
-
+default_palette = px.colors.qualitative.Plotly # default palette
 palette = colorblind_palette if accessibility_mode else default_palette
 
 
 
 # Get selected client application id
 selected_value = st.session_state.get("selected_value", None)
-if selected_value is None:
-    st.warning("Please select a client credit application reference on the Home page first.")
+
+if st.session_state.accessibility_mode:
+    if selected_value is None:
+        st.warning("# Please select a client credit application reference on the Home page first.")
+    else:
+        st.write(f"# Using selected client application: {selected_value}")
 else:
-    st.write(f"Using selected client application: {selected_value}")
-    
+    if selected_value is None:
+        st.warning("### Please select a client credit application reference on the Home page first.")
+    else:
+        st.write(f"### Using selected client application: {selected_value}")
+
+
 
 def set_bg_color(color):
     st.markdown(
@@ -70,7 +75,11 @@ set_bg_color('#fbf0ef') # light pink
 # set_bg_color('#2fbeb5') # light green
 # set_bg_color('#f1bd5f') # sand
 
-st.image("bandeau.png")
+if st.session_state.accessibility_mode:
+    st.image("bandeau.png", caption="Company Logo: Prêt à Dépenser", use_container_width=True)  # Added alt text via caption
+else:
+    st.image("bandeau.png", use_container_width=False)
+
 
 
 # Send a get request to the API using the selected client credit application reference
