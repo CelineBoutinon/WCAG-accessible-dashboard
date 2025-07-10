@@ -21,6 +21,35 @@ if "accessibility_mode" not in st.session_state:
 
 st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> 🔍 Enable Accessibility Mode 🔍 </h1>",
             unsafe_allow_html=True)
+
+st.markdown(
+    """
+    <style>
+    /* Make the toggle (checkbox) larger */
+    [data-testid="stToggle"] label {
+        font-size: 1.5em !important;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+    }
+    [data-testid="stToggle"] input[type="checkbox"] {
+        width: 2em;
+        height: 2em;
+        margin-right: 1em;
+    }
+    /* Make the help/description text larger */
+    .stTooltipContent {
+        font-size: 1.3em !important;
+    }
+    /* Increase spacing for clarity */
+    [data-testid="stToggle"] {
+        margin-bottom: 1.5em;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+) 
+
 st.session_state.accessibility_mode = st.toggle(
     label="     ",
     value=st.session_state.accessibility_mode,
@@ -91,7 +120,7 @@ set_bg_color('#fbf0ef')  # light pink
 # --- Display title & company logo with alt text (1.1.1) ---
 st.markdown("<h1 style='color:#242164; text-align:center; font-family:Walbaum Heading; font-size:3em;'> Welcome to the </h1>",
             unsafe_allow_html=True)
-st.image("logo_streamlit.png", caption="Logo: Credit Scoring App", use_column_width=True)  # Added alt text via caption
+st.image("logo_streamlit.png", caption="Logo: Credit Scoring App", use_container_width=True)  # Added alt text via caption
 st.markdown("<h1 style='color:#242164; text-align:center; font-family:Walbaum Heading; font-size:3em;'> Credit Scoring App! </h1>",
             unsafe_allow_html=True)
 st.write("")

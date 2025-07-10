@@ -11,8 +11,14 @@ import streamlit as st
 
 app = Flask(__name__)
 
-# Set the page title for accessibility (WCAG 2.4.2)
-st.set_page_config(page_title="Credit Scoring - Home", layout="wide")
+# --- WCAG: Set unique and descriptive page title (2.4.2) ---
+st.set_page_config(
+    page_title="Credit Scoring App - Home",
+    page_icon="🏠",
+    layout="wide"
+)
+
+st.title("🏠 Credit Scoring App - Home")
 
 # Accessibility mode
 accessibility_mode = st.session_state.get("accessibility_mode", False)
