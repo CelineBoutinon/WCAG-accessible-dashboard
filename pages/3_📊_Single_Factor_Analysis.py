@@ -35,8 +35,6 @@ else:
     pass
 
 # For graphs, use color-blind-friendly palettes conditionally
-import plotly.express as px
-
 colorblind_palette = px.colors.qualitative.Safe  # colorblind-friendly palette
 default_palette = px.colors.qualitative.Plotly
 
@@ -46,6 +44,29 @@ if st.session_state.accessibility_mode:
     st.image("bandeau.png", caption="Company Logo: Prêt à Dépenser", use_container_width=True)  # Added alt text via caption
 else:
     st.image("bandeau.png", use_container_width=True)
+
+# Get selected client application id
+selected_value = st.session_state.get("selected_value", None)
+if selected_value is None:
+    st.warning("Please select a client credit application reference on the Home page first.")
+else:
+    st.write(f"Using selected client application: {selected_value}")
+
+    # Send a get request to the API using the selected client credit application reference
+    app_response = requests.get(f"https://credit-scoring-api-0p1u.onrender.com/predict/{selected_value}") # web API
+    # app_response = requests.get(f"http://127.0.0.1:5000/predict/{selected_value}") # local API
+
+    # Import elements from API response separately for graphs
+    app_data = app_response.json()
+    shap_values_client_json = app_data["Shap values client"]
+    shap_values_client_dict = json.loads(shap_values_client_json)[0]
+    shap_values_array = np.array(list(shap_values_client_dict.values()))
+    feature_names = list(shap_values_client_dict.keys())
+    base_value = app_data.get("Expected Shap Value")
+    threshold_value =  app_data.get("Threshold")
+    client_data_json = app_data["Client data"]
+    client_data_dict = json.loads(client_data_json)[0]
+    client_data_array = np.array(list(client_data_dict.values()))
 
 
 # Get selected client application id

@@ -101,16 +101,30 @@ client_data_array = np.array(list(client_data_dict.values()))
 # Display user's chosen basic demographics from API response
 if app_response.status_code == 200:
     client_info = app_data['Client summary information'][0]
+
+    if st.session_state.accessibility_mode:
     # st.markdown("<h4 style='font-size: 28px;'>Select client demographics to display:</h4>", unsafe_allow_html=True)
-    st.write("## ✌️ Step 2 - Select client demographics to display:")
-    selected_demographics = st.multiselect("", # Leave text empty to avoid duplicate with above
-                                            options=list(client_info.keys()),
-                                            default=list(client_info.keys())  # Show all by default
-                                            )
-    st.write("### You selected client demographics:")
-    for demo in selected_demographics:
-        st.markdown(f"<span style='font-size:28px;'> - **{demo}:** {client_info[demo]}</span>",
-                  unsafe_allow_html=True)
+        st.write("# ✌️ Step 2 - Select client demographics to display:")
+        selected_demographics = st.multiselect("", # Leave text empty to avoid duplicate with above
+                                                options=list(client_info.keys()),
+                                                default=list(client_info.keys())  # Show all by default
+                                                )
+        st.write("# You selected client demographics:")
+        for demo in selected_demographics:
+            st.markdown(f"<span style='font-size:28px;'> - **{demo}:** {client_info[demo]}</span>",
+                    unsafe_allow_html=True)
+        
+    else: 
+    # st.markdown("<h4 style='font-size: 28px;'>Select client demographics to display:</h4>", unsafe_allow_html=True)
+        st.write("### ✌️ Step 2 - Select client demographics to display:")
+        selected_demographics = st.multiselect("", # Leave text empty to avoid duplicate with above
+                                             options=list(client_info.keys()),
+                                                default=list(client_info.keys())  # Show all by default
+                                             )
+        st.write("### You selected client demographics:")
+        for demo in selected_demographics:
+            st.markdown(f"<span style='font-size:28px;'> - **{demo}:** {client_info[demo]}</span>",
+                    unsafe_allow_html=True)
    
 
 
