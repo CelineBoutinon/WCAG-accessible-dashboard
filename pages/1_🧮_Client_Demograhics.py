@@ -50,11 +50,13 @@ if st.session_state.accessibility_mode:
         st.warning("# Please select a client credit application reference on the Home page first.")
     else:
         st.write(f"# Using selected client application: {selected_value}")
+        st.write("# ✅ Accessibility mode is ON")
 else:
     if selected_value is None:
         st.warning("### Please select a client credit application reference on the Home page first.")
     else:
         st.write(f"### Using selected client application: {selected_value}")
+        st.write("### ❌ Accessibility mode is OFF")
 
 
 
@@ -109,7 +111,7 @@ if app_response.status_code == 200:
                                                 options=list(client_info.keys()),
                                                 default=list(client_info.keys())  # Show all by default
                                                 )
-        st.write("# You selected client demographics:")
+        st.write("# You selected the following client demographics:")
         for demo in selected_demographics:
             st.markdown(f"<span style='font-size:28px;'> - **{demo}:** {client_info[demo]}</span>",
                     unsafe_allow_html=True)
@@ -121,7 +123,7 @@ if app_response.status_code == 200:
                                              options=list(client_info.keys()),
                                                 default=list(client_info.keys())  # Show all by default
                                              )
-        st.write("### You selected client demographics:")
+        st.write("### You selected the following client demographics:")
         for demo in selected_demographics:
             st.markdown(f"<span style='font-size:28px;'> - **{demo}:** {client_info[demo]}</span>",
                     unsafe_allow_html=True)

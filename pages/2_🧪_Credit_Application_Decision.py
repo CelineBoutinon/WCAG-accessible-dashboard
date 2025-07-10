@@ -40,6 +40,21 @@ default_palette = px.colors.qualitative.Plotly
 palette = colorblind_palette if accessibility_mode else default_palette
 
 
+# Get selected client application id
+selected_value = st.session_state.get("selected_value", None)
+
+if st.session_state.accessibility_mode:
+    if selected_value is None:
+        st.warning("# Please select a client credit application reference on the Home page first.")
+    else:
+        st.write(f"# Using selected client application: {selected_value}")
+        st.write("# ✅ Accessibility mode is ON")
+else:
+    if selected_value is None:
+        st.warning("### Please select a client credit application reference on the Home page first.")
+    else:
+        st.write(f"### Using selected client application: {selected_value}")
+        st.write("### ❌ Accessibility mode is OFF")
 
 
 if st.session_state.accessibility_mode:
@@ -48,12 +63,11 @@ else:
     st.image("bandeau.png", use_container_width=False)
 
 
-# Get selected client application id
-selected_value = st.session_state.get("selected_value", None)
+
 if selected_value is None:
     st.warning("Please select a client credit application reference on the Home page first.")
 else:
-    st.write(f"Using selected client application: {selected_value}")
+    # st.write(f"Using selected client application: {selected_value}")
 
     # Send a get request to the API using the selected client credit application reference
     app_response = requests.get(f"https://credit-scoring-api-0p1u.onrender.com/predict/{selected_value}") # web API
@@ -75,42 +89,42 @@ else:
 
 
     # Check if API data is loaded
-    if "app_data" not in st.session_state:
-        st.warning("API data not loaded yet. Please go back to Home page and select a client.")
-    else:
+    # if "app_data" not in st.session_state:
+    #     st.warning("API data not loaded yet. Please go back to Home page and select a client.")
+    # else:
         # Access stored data
-        shap_values_client_dict = st.session_state.shap_values_client_dict
-        shap_values_array = st.session_state.shap_values_array
-        feature_names = st.session_state.feature_names
-        base_value = st.session_state.base_value
-        threshold_value = st.session_state.threshold_value
-        client_data_dict = st.session_state.client_data_dict
-        client_data_array = st.session_state.client_data_array
-        app_data = st.session_state.app_data
-        app_response = st.session_state.app_response
+        # shap_values_client_dict = st.session_state.shap_values_client_dict
+        # shap_values_array = st.session_state.shap_values_array
+        # feature_names = st.session_state.feature_names
+        # base_value = st.session_state.base_value
+        # threshold_value = st.session_state.threshold_value
+        # client_data_dict = st.session_state.client_data_dict
+        # client_data_array = st.session_state.client_data_array
+        # app_data = st.session_state.app_data
+        # app_response = st.session_state.app_response
 
         # st.write(f"Using client application {selected_value}")
         # Example: show feature names and SHAP values
         # st.write("Feature names:", feature_names)
         # st.write("SHAP values:", shap_values_array)
 
-        st.write("# 💫 Client credit scoring model results:💫")
-        # st.write(f"Client default probability: {app_data['Client default probability'] * 100:.2f}%")
-        # st.write("Class :", app_data['Class'])
-        if app_data['Class'] == 'no default':
-            st.markdown(f"<span style='font-size:28px;'> **Predicted behavior** : client will repay loan 👍</span>",
-                        unsafe_allow_html=True)
-        else:
-            st.markdown(f"<span style='font-size:28px;'> **Predicted behavior** : client will default on loan 👎</span>",
-                        unsafe_allow_html=True)
+    st.write("# 💫 Client credit scoring model results:💫")
+    # st.write(f"Client default probability: {app_data['Client default probability'] * 100:.2f}%")
+    # st.write("Class :", app_data['Class'])
+    if app_data['Class'] == 'no default':
+        st.markdown(f"<span style='font-size:28px;'> **Predicted behavior** : client will repay loan 👍</span>",
+                    unsafe_allow_html=True)
+    else:
+        st.markdown(f"<span style='font-size:28px;'> **Predicted behavior** : client will default on loan 👎</span>",
+                    unsafe_allow_html=True)
         
-        # st.write("Decision :", app_data['Decision'])
-        if app_data['Decision'] == "grant loan":
-            st.write(f"<span style='font-size: 28px;'> **Decision** : {app_data['Decision']} 🥂🎈🎉</span>",
-                        unsafe_allow_html=True)
-        else:
-            st.write(f"<span style='font-size: 28px;'> **Decision** : {app_data['Decision']} ⛔</span>",
-                        unsafe_allow_html=True)
+    # st.write("Decision :", app_data['Decision'])
+    if app_data['Decision'] == "grant loan":
+        st.write(f"<span style='font-size: 28px;'> **Decision** : {app_data['Decision']} 🥂🎈🎉</span>",
+                    unsafe_allow_html=True)
+    else:
+        st.write(f"<span style='font-size: 28px;'> **Decision** : {app_data['Decision']} ⛔</span>",
+                    unsafe_allow_html=True)
 
 
 

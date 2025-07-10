@@ -38,8 +38,23 @@ else:
 # For graphs, use color-blind-friendly palettes conditionally
 colorblind_palette = px.colors.qualitative.Safe  # colorblind-friendly palette
 default_palette = px.colors.qualitative.Plotly
-
 palette = colorblind_palette if accessibility_mode else default_palette
+
+# Get selected client application id
+selected_value = st.session_state.get("selected_value", None)
+
+if st.session_state.accessibility_mode:
+    if selected_value is None:
+        st.warning("# Please select a client credit application reference on the Home page first.")
+    else:
+        st.write(f"# Using selected client application: {selected_value}")
+        st.write("# ✅ Accessibility mode is ON")
+else:
+    if selected_value is None:
+        st.warning("### Please select a client credit application reference on the Home page first.")
+    else:
+        st.write(f"### Using selected client application: {selected_value}")
+        st.write("### ❌ Accessibility mode is OFF")
 
 if st.session_state.accessibility_mode:
     st.image("bandeau.png", caption="Company Logo: Prêt à Dépenser", use_container_width=True)  # Added alt text via caption
@@ -51,7 +66,7 @@ selected_value = st.session_state.get("selected_value", None)
 if selected_value is None:
     st.warning("Please select a client credit application reference on the Home page first.")
 else:
-    st.write(f"Using selected client application: {selected_value}")
+    # st.write(f"Using selected client application: {selected_value}")
 
     # Send a get request to the API using the selected client credit application reference
     app_response = requests.get(f"https://credit-scoring-api-0p1u.onrender.com/predict/{selected_value}") # web API
