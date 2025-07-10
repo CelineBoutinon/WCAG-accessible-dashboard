@@ -7,8 +7,37 @@
 from flask import Flask, jsonify
 from joblib import load
 import pandas as pd
+import streamlit as st
 
 app = Flask(__name__)
+
+# Set the page title for accessibility (WCAG 2.4.2)
+st.set_page_config(page_title="Credit Scoring - Home", layout="wide")
+
+# Accessibility mode
+accessibility_mode = st.session_state.get("accessibility_mode", False)
+
+if accessibility_mode:
+    st.markdown(
+        """
+        <style>
+        body {
+            background-color: black !important;
+            color: white !important;
+            font-size: 20px !important;
+        }
+        button, input {
+            background-color: yellow !important;
+            color: black !important;
+            font-weight: bold !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+else:
+    # Default or light theme CSS or no override
+    pass
 
 # Load client test data
 client_data=pd.read_csv('test_data_final.csv').drop(labels=['Unnamed: 0'], axis=1)
@@ -19,12 +48,36 @@ model = load('final_model.joblib')
 # Load custom threshold
 custom_threshold = load('optimal_threshold.joblib')
 
+# Add a descriptive alt text for the banner image (WCAG 1.1.1)
+st.image("bandeau.png", caption="Logo Home Credit - Credit Scoring Application", use_column_width=True)
+
+
 @app.route('/', methods=['GET'])
 def home():
     return '''<h1>Credit Scoring</h1>
     <p>Welcome to the HOME CREDIT Credit Scoring app.</p>
     <p>- use /predict/ID to retrieve client credit application decision</p>
     <p>where ID is the client's unique Home Credit application number (whole number between 1 and 48745)</p>'''
+
+    st.title("Credit Scoring Application")
+    st.markdown("""
+    Welcome to the Home Credit Credit Scoring app.
+
+    - Use the sidebar to navigate between pages.
+    - Accessibility mode is available for users with visual impairments.
+    """)
+
+    # Example: Add a button to toggle accessibility mode
+    if st.button("Toggle Accessibility Mode"):
+        st.session_state["accessibility_mode"] = not accessibility_mode
+        st.experimental_rerun()
+
+    # Add instructions for keyboard navigation (optional, helps accessibility)
+    st.markdown("""
+    **Tip:** You can use the `Tab` key to navigate between interactive elements.
+    """)
+
+
  
 @app.route("/predict/<int:id>", methods=['GET'])
 def predict(id):
