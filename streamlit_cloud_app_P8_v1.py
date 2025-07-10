@@ -15,6 +15,12 @@ import plotly.graph_objects as go
 import pandas as pd
 import plotly.express as px
 
+
+# --- WCAG: Accessibility toggle ---
+if "accessibility_mode" not in st.session_state:
+    st.session_state.accessibility_mode = False
+
+
 # --- WCAG: Set unique and descriptive browser tab title (2.4.2) ---
 st.set_page_config(
     page_title="Credit Scoring App - Home",
