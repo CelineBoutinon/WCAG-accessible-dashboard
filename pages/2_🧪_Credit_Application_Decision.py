@@ -43,18 +43,26 @@ palette = colorblind_palette if accessibility_mode else default_palette
 # Get selected client application id
 selected_value = st.session_state.get("selected_value", None)
 
+HOME_PAGE = "streamlit_cloud_app_P8_v1.py"  # or "Home.py" or the correct filename
+
 if st.session_state.accessibility_mode:
     if selected_value is None:
         st.warning("# Please select a client credit application reference on the Home page first.")
+        st.markdown("# 🏠︎ [Back to Home](streamlit_cloud_app_P8_v1.py)")
+        st.page_link(HOME_PAGE, label="Back to Home")
     else:
         st.write(f"# Using selected client application: {selected_value}")
         st.write("# 🗣 Accessibility mode is ON - navigate to home page to turn off")
+        st.markdown("# 🏠︎ [Back to Home](streamlit_cloud_app_P8_v1.py)")
+        st.page_link(HOME_PAGE, label="Back to Home")
 else:
     if selected_value is None:
         st.warning("### Please select a client credit application reference on the Home page first.")
+        st.page_link(HOME_PAGE, label="🏠 Back to Home")
     else:
         st.write(f"### Using selected client application: {selected_value}")
         st.write("### 🛈 Accessibility mode is OFF - navigate to home page to turn on")
+        st.page_link(HOME_PAGE, label="🏠 Back to Home")
 
 
 if st.session_state.accessibility_mode:
@@ -152,7 +160,7 @@ if not st.session_state.accessibility_mode:
                                             base_values=base_value,
                                             feature_names=feature_names)
         fig, ax = plt.subplots(figsize=(10,6))
-        st.title(f"## Key decision factors for client {selected_value}")
+        st.title(f" Key decision factors for client {selected_value}")
         shap.plots.waterfall(shap_explanation, max_display=6) # Show the top 5 features and group the remaining features
         st.pyplot(fig)
 

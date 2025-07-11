@@ -45,18 +45,26 @@ palette = colorblind_palette if accessibility_mode else default_palette
 # Get selected client application id
 selected_value = st.session_state.get("selected_value", None)
 
+HOME_PAGE = "streamlit_cloud_app_P8_v1.py"  # or "Home.py" or the correct filename
+
 if st.session_state.accessibility_mode:
     if selected_value is None:
         st.warning("# Please select a client credit application reference on the Home page first.")
+        st.markdown("# 🏠︎ [Back to Home](streamlit_cloud_app_P8_v1.py)")
+        st.page_link(HOME_PAGE, label="Back to Home")
     else:
         st.write(f"# Using selected client application: {selected_value}")
         st.write("# 🗣 Accessibility mode is ON - navigate to home page to turn off")
+        st.markdown("# 🏠︎ [Back to Home](streamlit_cloud_app_P8_v1.py)")
+        st.page_link(HOME_PAGE, label="Back to Home")
 else:
     if selected_value is None:
         st.warning("### Please select a client credit application reference on the Home page first.")
+        st.page_link(HOME_PAGE, label="🏠 Back to Home")
     else:
         st.write(f"### Using selected client application: {selected_value}")
         st.write("### 🛈 Accessibility mode is OFF - navigate to home page to turn on")
+        st.page_link(HOME_PAGE, label="🏠 Back to Home")
 
 
 
@@ -110,10 +118,11 @@ if app_response.status_code == 200:
         selected_demographics = st.multiselect("", # Leave text empty to avoid duplicate with above
                                                 options=list(client_info.keys()),
                                                 default=list(client_info.keys())  # Show all by default
-                                                )
-        st.write("# You selected the following client demographics:")
+                                                ) # !!! Streamlit's st.multiselect widget does not currently support 
+                                                  # direct customization of the color or style of the options or the 
+                                                  # selected tags within the dropdown !!!
         for demo in selected_demographics:
-            st.markdown(f"<span style='font-size:40px;'> - **{demo}:** {client_info[demo]}</span>",
+            st.markdown(f"<span style='font-size:40px; color:#000000;'> - **{demo}:** {client_info[demo]}</span>",
                     unsafe_allow_html=True)
         
     else: 
