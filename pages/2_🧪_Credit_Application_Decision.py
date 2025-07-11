@@ -198,13 +198,16 @@ else:
     st.plotly_chart(fig)
 
     # Create SHAP waterfall plot
+    shap.plots.colors.red = "dimgray"
+    shap.plots.colors.blue = "gainsboro"
     if shap_values_array is not None:
         shap_explanation = shap.Explanation(values=shap_values_array, 
                                             base_values=base_value,
                                             feature_names=feature_names)
-        fig, ax = plt.subplots(figsize=(10,6))
+        # fig, ax = plt.subplots(figsize=(10,6))
         st.title(f"Key decision factors for client {selected_value}")
         shap.plots.waterfall(shap_explanation, max_display=6) # Show the top 5 features and group the remaining features
+        fig = plt.gcf()
         st.pyplot(fig)
 
     else: 
