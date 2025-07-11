@@ -1,7 +1,7 @@
 # # !!! THIS IS THE OCDS P8 APP !!!
 
 # to run Streamlit App locally, navigate to C:\Users\celin\DS Projets Python\OCDS-repos-all\OCDS-P8-API
-# and launch app by running streamlit run app.py
+# and launch app by running "streamlit run streamlit_cloud_app_P8_v1.py"
 # web app available at https://ocds-p8-dashboard.streamlit.app/
 
 
@@ -130,7 +130,7 @@ set_bg_color('#fbf0ef')  # light pink
 if st.session_state.accessibility_mode:
     st.markdown("<h1 style='color:#242164; text-align:center; font-family:Walbaum Heading; font-size:4em;'> Welcome to the </h1>",
                 unsafe_allow_html=True)
-    st.image("logo_streamlit.png", caption="Company Logo: Prêt à Dépenser", use_container_width=True)  # Added alt text via caption
+    st.image("logo_bw.png", caption="Company Logo: Prêt à Dépenser", use_container_width=True)  # Added alt text via caption
     st.markdown("<h1 style='color:#242164; text-align:center; font-family:Walbaum Heading; font-size:4em;'> Credit Scoring App! </h1>",
                 unsafe_allow_html=True)
     st.write("# You can toggle between the Home page and the 4 pages of this app with TAB + ENTER")
@@ -150,7 +150,7 @@ else:
 
 # --- Step 1: Get user to select client credit application reference ---
 if st.session_state.accessibility_mode:
-    st.write("# ☝️ Step 1 - Enter a client credit application reference:")
+    st.write("# ☝🏿 Step 1 - Enter a client credit application reference:")
     if "selected_value" not in st.session_state:
         st.session_state.selected_value = 1  # default value
     st.session_state.selected_value = st.number_input(

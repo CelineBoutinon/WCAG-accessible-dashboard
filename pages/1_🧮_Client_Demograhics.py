@@ -50,13 +50,13 @@ if st.session_state.accessibility_mode:
         st.warning("# Please select a client credit application reference on the Home page first.")
     else:
         st.write(f"# Using selected client application: {selected_value}")
-        st.write("# ✅ Accessibility mode is ON")
+        st.write("# 🗣 Accessibility mode is ON - navigate to home page to turn off")
 else:
     if selected_value is None:
         st.warning("### Please select a client credit application reference on the Home page first.")
     else:
         st.write(f"### Using selected client application: {selected_value}")
-        st.write("### ❌ Accessibility mode is OFF")
+        st.write("### 🛈 Accessibility mode is OFF - navigate to home page to turn on")
 
 
 
@@ -78,7 +78,7 @@ set_bg_color('#fbf0ef') # light pink
 # set_bg_color('#f1bd5f') # sand
 
 if st.session_state.accessibility_mode:
-    st.image("bandeau.png", caption="Company Logo: Prêt à Dépenser", use_container_width=True)  # Added alt text via caption
+    st.image("bandeau_bw.png", caption="Company Logo: Prêt à Dépenser", use_container_width=True)  # Added alt text via caption
 else:
     st.image("bandeau.png", use_container_width=False)
 
@@ -106,14 +106,14 @@ if app_response.status_code == 200:
 
     if st.session_state.accessibility_mode:
     # st.markdown("<h4 style='font-size: 28px;'>Select client demographics to display:</h4>", unsafe_allow_html=True)
-        st.write("# ✌️ Step 2 - Select client demographics to display:")
+        st.write("# ✌🏿 Step 2 - Select client demographics to display:")
         selected_demographics = st.multiselect("", # Leave text empty to avoid duplicate with above
                                                 options=list(client_info.keys()),
                                                 default=list(client_info.keys())  # Show all by default
                                                 )
         st.write("# You selected the following client demographics:")
         for demo in selected_demographics:
-            st.markdown(f"<span style='font-size:28px;'> - **{demo}:** {client_info[demo]}</span>",
+            st.markdown(f"<span style='font-size:40px;'> - **{demo}:** {client_info[demo]}</span>",
                     unsafe_allow_html=True)
         
     else: 

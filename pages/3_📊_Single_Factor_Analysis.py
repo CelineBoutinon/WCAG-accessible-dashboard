@@ -47,41 +47,41 @@ if st.session_state.accessibility_mode:
         st.warning("# Please select a client credit application reference on the Home page first.")
     else:
         st.write(f"# Using selected client application: {selected_value}")
-        st.write("# ✅ Accessibility mode is ON")
+        st.write("# 🗣 Accessibility mode is ON - navigate to home page to turn off")
 else:
     if selected_value is None:
         st.warning("### Please select a client credit application reference on the Home page first.")
     else:
         st.write(f"### Using selected client application: {selected_value}")
-        st.write("### ❌ Accessibility mode is OFF")
+        st.write("### 🛈 Accessibility mode is OFF - navigate to home page to turn on")
 
 if st.session_state.accessibility_mode:
-    st.image("bandeau.png", caption="Company Logo: Prêt à Dépenser", use_container_width=True)  # Added alt text via caption
+    st.image("bandeau_bw.png", caption="Company Logo: Prêt à Dépenser", use_container_width=True)  # Added alt text via caption
 else:
     st.image("bandeau.png", use_container_width=True)
 
 # Get selected client application id
-selected_value = st.session_state.get("selected_value", None)
-if selected_value is None:
-    st.warning("Please select a client credit application reference on the Home page first.")
-else:
+# selected_value = st.session_state.get("selected_value", None)
+# if selected_value is None:
+    # st.warning("Please select a client credit application reference on the Home page first.")
+# else:
     # st.write(f"Using selected client application: {selected_value}")
 
-    # Send a get request to the API using the selected client credit application reference
-    app_response = requests.get(f"https://credit-scoring-api-0p1u.onrender.com/predict/{selected_value}") # web API
-    # app_response = requests.get(f"http://127.0.0.1:5000/predict/{selected_value}") # local API
+# Send a get request to the API using the selected client credit application reference
+app_response = requests.get(f"https://credit-scoring-api-0p1u.onrender.com/predict/{selected_value}") # web API
+# app_response = requests.get(f"http://127.0.0.1:5000/predict/{selected_value}") # local API
 
-    # Import elements from API response separately for graphs
-    app_data = app_response.json()
-    shap_values_client_json = app_data["Shap values client"]
-    shap_values_client_dict = json.loads(shap_values_client_json)[0]
-    shap_values_array = np.array(list(shap_values_client_dict.values()))
-    feature_names = list(shap_values_client_dict.keys())
-    base_value = app_data.get("Expected Shap Value")
-    threshold_value =  app_data.get("Threshold")
-    client_data_json = app_data["Client data"]
-    client_data_dict = json.loads(client_data_json)[0]
-    client_data_array = np.array(list(client_data_dict.values()))
+# Import elements from API response separately for graphs
+app_data = app_response.json()
+shap_values_client_json = app_data["Shap values client"]
+shap_values_client_dict = json.loads(shap_values_client_json)[0]
+shap_values_array = np.array(list(shap_values_client_dict.values()))
+feature_names = list(shap_values_client_dict.keys())
+base_value = app_data.get("Expected Shap Value")
+threshold_value =  app_data.get("Threshold")
+client_data_json = app_data["Client data"]
+client_data_dict = json.loads(client_data_json)[0]
+client_data_array = np.array(list(client_data_dict.values()))
 
 
 # Get selected client application id
@@ -177,7 +177,7 @@ if not st.session_state.accessibility_mode:
     st.plotly_chart(fig2)
 
 else:
-    st.write("# 👌 Step 3 - Choose field for client univariate analysis display:")
+    st.write("# 👌🏿 Step 3 - Choose field for client univariate analysis display:")
         # Create boxplot
     st.write("# Choose a column for the box plot:")
     box_column = st.selectbox("", float_cols)
@@ -186,7 +186,7 @@ else:
     st.write("# Clients Distribution:")
     fig2.add_trace(go.Violin(y=client_data[box_column],
                     name='',
-                    marker=dict(color='#F1BD5F'),
+                    marker=dict(color='dimgray'),
                     opacity=0.8))
 
     if selected_value in client_data.index:
@@ -201,7 +201,7 @@ else:
                         xaxis='x2',
                         showlegend=True,
                         name = f'Client ID: {selected_value}',
-                        line=dict(dash='dot', color = "#f05876", width = 2))
+                        line=dict(dash='dot', color = "black", width = 2))
         
         average_value = client_data[box_column].mean()
         # add a third axis that overlays the existing ones
@@ -213,7 +213,7 @@ else:
                     xaxis='x3',
                     showlegend=True,
                     name = "Average - All clients",
-                    line=dict(dash='solid', color = "#242164", width = 2))
+                    line=dict(dash='solid', color = "black", width = 2))
 
     else:
         st.warning(f"Client ID {selected_value} not found in the dataset for the box plot.")
@@ -222,6 +222,7 @@ else:
         #                    yaxis_title=box_column)
 
     st.plotly_chart(fig2)
-    st.write("# Dotted line represents relative position of client compared to average of all clients for this variable," \
-    " which is represented by the solid line.")
+    st.write("# Dotted line represents relative position of client compared to distribution of all clients for this variable. " \
+    "The solid line represents the average of all clients for this variable.")
+    st.write("# Graph is interactive. Hover over top right corner of graph for zoom options.")
 
