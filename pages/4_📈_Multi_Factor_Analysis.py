@@ -35,9 +35,9 @@ else:
     pass
 
 # For graphs, use color-blind-friendly palettes conditionally
-colorblind_palette = px.colors.qualitative.Safe  # colorblind-friendly palette
-default_palette = px.colors.qualitative.Plotly
-palette = colorblind_palette if accessibility_mode else default_palette
+# colorblind_palette = px.colors.qualitative.Safe  # colorblind-friendly palette
+# default_palette = px.colors.qualitative.Plotly
+# palette = colorblind_palette if accessibility_mode else default_palette
 
 # Get selected client application id
 selected_value = st.session_state.get("selected_value", None)

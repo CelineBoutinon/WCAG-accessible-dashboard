@@ -36,9 +36,9 @@ else:
     pass
 
 # For graphs, use color-blind-friendly palettes conditionally
-colorblind_palette = px.colors.qualitative.Safe  # colorblind-friendly palette
-default_palette = px.colors.qualitative.Plotly # default palette
-palette = colorblind_palette if accessibility_mode else default_palette
+# colorblind_palette = px.colors.qualitative.Safe  # colorblind-friendly palette
+# default_palette = px.colors.qualitative.Plotly # default palette
+# palette = colorblind_palette if accessibility_mode else default_palette
 
 
 
