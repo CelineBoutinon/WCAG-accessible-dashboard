@@ -51,7 +51,7 @@ if st.session_state.accessibility_mode:
         st.page_link(HOME_PAGE, label="Back to Home Page")
     else:
         st.write(f"# Using selected client application: {selected_value}")
-        st.write("# 🗣 Accessibility mode is ON - navigate to home page to turn off")
+        st.write("# 🗣 Accessibility mode enabled - navigate to home page to disable")
         st.markdown("# 🏠︎ [Back to Home Page](streamlit_cloud_app_P8_v1.py)")
         st.page_link(HOME_PAGE, label="Back to Home Page")
 else:
@@ -60,7 +60,7 @@ else:
         st.page_link(HOME_PAGE, label="🏠 Back to Home Page")
     else:
         st.write(f"### Using selected client application: {selected_value}")
-        st.write("### 🛈 Accessibility mode is OFF - navigate to home page to turn on")
+        st.write("### 🛈 Accessibility mode disabled - navigate to home page to enable")
         st.page_link(HOME_PAGE, label="🏠 Back to Home Page")
 
 if st.session_state.accessibility_mode:
