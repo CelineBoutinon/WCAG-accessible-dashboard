@@ -7,6 +7,8 @@ import numpy as np
 import plotly.graph_objects as go
 import pandas as pd
 import plotly.express as px
+from PIL import Image
+import io
 
 accessibility_mode = st.session_state.get("accessibility_mode", False)
 
@@ -49,20 +51,20 @@ if st.session_state.accessibility_mode:
     if selected_value is None:
         st.warning("# Please select a client credit application reference on the Home page first.")
         st.markdown("# 🏠︎ [Back to Home](streamlit_cloud_app_P8_v1.py)")
-        st.page_link(HOME_PAGE, label="Back to Home")
+        st.page_link(HOME_PAGE, label="Back to Home Page")
     else:
         st.write(f"# Using selected client application: {selected_value}")
         st.write("# 🗣 Accessibility mode is ON - navigate to home page to turn off")
         st.markdown("# 🏠︎ [Back to Home](streamlit_cloud_app_P8_v1.py)")
-        st.page_link(HOME_PAGE, label="Back to Home")
+        st.page_link(HOME_PAGE, label="Back to Home Page")
 else:
     if selected_value is None:
         st.warning("### Please select a client credit application reference on the Home page first.")
-        st.page_link(HOME_PAGE, label="🏠 Back to Home")
+        st.page_link(HOME_PAGE, label="🏠 Back to Home Page")
     else:
         st.write(f"### Using selected client application: {selected_value}")
         st.write("### 🛈 Accessibility mode is OFF - navigate to home page to turn on")
-        st.page_link(HOME_PAGE, label="🏠 Back to Home")
+        st.page_link(HOME_PAGE, label="🏠 Back to Home Page")
 
 
 if st.session_state.accessibility_mode:
@@ -208,15 +210,20 @@ else:
     # Create SHAP waterfall plot
     shap.plots.colors.red = "dimgray"
     shap.plots.colors.blue = "gainsboro"
+
     if shap_values_array is not None:
         shap_explanation = shap.Explanation(values=shap_values_array, 
                                             base_values=base_value,
                                             feature_names=feature_names)
-        # fig, ax = plt.subplots(figsize=(10,6))
         st.title(f"Key decision factors for client {selected_value}")
         shap.plots.waterfall(shap_explanation, max_display=6) # Show the top 5 features and group the remaining features
         fig = plt.gcf()
         st.pyplot(fig)
+        # NB: due to limited customisation available with SHAP plots, it was not possible to draw a B&W or greyscale
+        # waterfall plot, however the default red & blue colors in SHAP plots are considered colorblind friendly for most
+        # types of color vision deficiencies. Numbers are also displayed in white font on the bars, making them clearly
+        # readable for colorblind users (black on red background must be avoided though). Test of graph with 1 colorblind
+        # user on 13/07/25 - all ok.
 
-    else: 
+    else:
         st.error(f"Failed to fetch Shap values for client application. API status code : {app_response.status_code}")

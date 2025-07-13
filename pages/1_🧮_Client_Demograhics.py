@@ -51,20 +51,20 @@ if st.session_state.accessibility_mode:
     if selected_value is None:
         st.warning("# Please select a client credit application reference on the Home page first.")
         st.markdown("# 🏠︎ [Back to Home](streamlit_cloud_app_P8_v1.py)")
-        st.page_link(HOME_PAGE, label="Back to Home")
+        st.page_link(HOME_PAGE, label="Back to Home Page")
     else:
         st.write(f"# Using selected client application: {selected_value}")
         st.write("# 🗣 Accessibility mode is ON - navigate to home page to turn off")
         st.markdown("# 🏠︎ [Back to Home](streamlit_cloud_app_P8_v1.py)")
-        st.page_link(HOME_PAGE, label="Back to Home")
+        st.page_link(HOME_PAGE, label="Back to Home Page")
 else:
     if selected_value is None:
         st.warning("### Please select a client credit application reference on the Home page first.")
-        st.page_link(HOME_PAGE, label="🏠 Back to Home")
+        st.page_link(HOME_PAGE, label="🏠 Back to Home Page")
     else:
         st.write(f"### Using selected client application: {selected_value}")
         st.write("### 🛈 Accessibility mode is OFF - navigate to home page to turn on")
-        st.page_link(HOME_PAGE, label="🏠 Back to Home")
+        st.page_link(HOME_PAGE, label="🏠 Back to Home Page")
 
 
 
