@@ -12,37 +12,17 @@ accessibility_mode = st.session_state.get("accessibility_mode", False)
 
 if accessibility_mode:
     # Inject high contrast CSS, increase font sizes, etc.
-    st.markdown(
-        """
-        <style>
-        body {
-            background-color: black !important;
-            color: white !important;
-            font-size: 20px !important;
-        }
-        /* Customize buttons, inputs, etc. for high contrast */
-        button, input {
-            background-color: yellow !important;
-            color: black !important;
-            font-weight: bold !important;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+    st.markdown("""<style> body {background-color: black !important; color: white !important;
+                font-size: 20px !important;} 
+                button, input {background-color: yellow !important; color: black !important;
+                font-weight: bold !important;} </style> """, unsafe_allow_html=True)
 else:
-    # Default or light theme CSS or no override
     pass
-
-# For graphs, use color-blind-friendly palettes conditionally
-# colorblind_palette = px.colors.qualitative.Safe  # colorblind-friendly palette
-# default_palette = px.colors.qualitative.Plotly
-# palette = colorblind_palette if accessibility_mode else default_palette
 
 # Get selected client application id
 selected_value = st.session_state.get("selected_value", None)
 
-HOME_PAGE = "streamlit_cloud_app_P8_v1.py"  # or "Home.py" or the correct filename
+HOME_PAGE = "streamlit_cloud_app_P8_v1.py"
 
 if st.session_state.accessibility_mode:
     if selected_value is None:
@@ -68,12 +48,11 @@ if st.session_state.accessibility_mode:
 else:
     st.image("bandeau.png", use_container_width=True)
 
-# Get selected client application id
-# selected_value = st.session_state.get("selected_value", None)
-# if selected_value is None:
-    # st.warning("Please select a client credit application reference on the Home page first.")
-# else:
-    # st.write(f"Using selected client application: {selected_value}")
+# --- Set default background color (WCAG 1.4.1) ---
+def set_bg_color(color):
+    st.markdown(f"""<style>.stApp {{background-color: {color};}} </style>""", unsafe_allow_html=True)
+
+set_bg_color('#fbf0ef')  # light pink
 
 # Send a get request to the API using the selected client credit application reference
 app_response = requests.get(f"https://credit-scoring-api-0p1u.onrender.com/predict/{selected_value}") # web API
@@ -90,34 +69,6 @@ threshold_value =  app_data.get("Threshold")
 client_data_json = app_data["Client data"]
 client_data_dict = json.loads(client_data_json)[0]
 client_data_array = np.array(list(client_data_dict.values()))
-
-
-# Get selected client application id
-# selected_value = st.session_state.get("selected_value", None)
-# if selected_value is None:
-#     st.warning("Please select a client credit application reference on the Home page first.")
-# else:
-    # st.write(f"Using selected client application: {selected_value}")
-
-# Check if API data is loaded
-    # if "app_data" not in st.session_state:
-        # st.warning("API data not loaded yet. Please go back to Home page and select a client.")
-    # else:
-        # Access stored data
-        # shap_values_client_dict = st.session_state.shap_values_client_dict
-        # shap_values_array = st.session_state.shap_values_array
-        # feature_names = st.session_state.feature_names
-        # base_value = st.session_state.base_value
-        # threshold_value = st.session_state.threshold_value
-        # client_data_dict = st.session_state.client_data_dict
-        # client_data_array = st.session_state.client_data_array
-        # app_data = st.session_state.app_data
-        # app_response = st.session_state.app_response
-
-        # st.write(f"Using client application {selected_value}")
-        # Example: show feature names and SHAP values
-        # st.write("Feature names:", feature_names)
-        # st.write("SHAP values:", shap_values_array)
 
 client_data=pd.read_csv('test_data_final.csv').drop(labels=['Unnamed: 0'], axis=1)
 column_names = client_data.columns.tolist()
@@ -137,11 +88,9 @@ float_cols = ['AMT_CREDIT', 'DISPOSABLE_INCOME', 'DISPOSABLE_INCOME_per_capita',
               'pa_RATE_DOWN_PAYMENT_mean', 'pa_REMAINING_CREDIT_DURATION_Y_mean', 'TOTAL_PAYMENT_DELAYS_DAYS', 
               'DOWN_PAYMENT_CURR_%', 'DEBT_RATE_INC_CURR_%', 'b_DAYS_CREDIT_CARD_max']
 
-
-
 if not st.session_state.accessibility_mode:
     st.write("## 👌 Step 3 - Choose field for client univariate analysis display:")
-        # Create boxplot
+    # Create boxplot
     st.write("### Choose a column for the box plot:")
     box_column = st.selectbox("", float_cols)
     fig2 = go.Figure()
@@ -153,11 +102,11 @@ if not st.session_state.accessibility_mode:
     if selected_value in client_data.index:
         selected_client_value = client_data.loc[selected_value, box_column] 
         
-        # add a second axis that overlays the existing one
+        # add a second axis
         fig2.layout.xaxis2 = go.layout.XAxis(overlaying='x', range=[0, 2], showticklabels=False)
         fig2.add_scatter(x = [0, 2],
                         # y = [20, 20],
-                        y=[selected_client_value, selected_client_value], # see https://stackoverflow.com/questions/58679441/python-plotly-add-horizontal-line-to-box-plot
+                        y=[selected_client_value, selected_client_value],
                         mode='lines',
                         xaxis='x2',
                         showlegend=True,
@@ -165,28 +114,22 @@ if not st.session_state.accessibility_mode:
                         line=dict(dash='dot', color = "#f05876", width = 2))
         
         average_value = client_data[box_column].mean()
-        # add a third axis that overlays the existing ones
+        # add a third axis
         fig2.layout.xaxis3 = go.layout.XAxis(overlaying='x', range=[0, 2], showticklabels=False)
         fig2.add_scatter(x = [0, 2],
-                    # y = [20, 20],
                     y=[average_value,average_value],
                     mode='lines',
                     xaxis='x3',
                     showlegend=True,
                     name = "Average - All clients",
                     line=dict(dash='solid', color = "#242164", width = 2))
-
     else:
         st.warning(f"Client ID {selected_value} not found in the dataset for the box plot.")
-
-        # fig2.update_layout(title=f"Box plot of {box_column} with Selected Client",
-        #                    yaxis_title=box_column)
-
     st.plotly_chart(fig2)
 
 else:
     st.write("# 👌🏿 Step 3 - Choose field for client univariate analysis display:")
-        # Create boxplot
+    # Create boxplot
     st.write("# Choose a column for the box plot:")
     box_column = st.selectbox("", float_cols)
     st.write("# You chose variable", box_column, ".")
@@ -200,11 +143,11 @@ else:
     if selected_value in client_data.index:
         selected_client_value = client_data.loc[selected_value, box_column] 
         
-        # add a second axis that overlays the existing one
+        # add a second axis
         fig2.layout.xaxis2 = go.layout.XAxis(overlaying='x', range=[0, 2], showticklabels=False)
         fig2.add_scatter(x = [0, 2],
                         # y = [20, 20],
-                        y=[selected_client_value, selected_client_value], # see https://stackoverflow.com/questions/58679441/python-plotly-add-horizontal-line-to-box-plot
+                        y=[selected_client_value, selected_client_value],
                         mode='lines',
                         xaxis='x2',
                         showlegend=True,
@@ -212,10 +155,9 @@ else:
                         line=dict(dash='dot', color = "black", width = 2))
         
         average_value = client_data[box_column].mean()
-        # add a third axis that overlays the existing ones
+        # add a third axis
         fig2.layout.xaxis3 = go.layout.XAxis(overlaying='x', range=[0, 2], showticklabels=False)
         fig2.add_scatter(x = [0, 2],
-                    # y = [20, 20],
                     y=[average_value,average_value],
                     mode='lines',
                     xaxis='x3',
@@ -225,9 +167,6 @@ else:
 
     else:
         st.warning(f"Client ID {selected_value} not found in the dataset for the box plot.")
-
-        # fig2.update_layout(title=f"Box plot of {box_column} with Selected Client",
-        #                    yaxis_title=box_column)
 
     st.plotly_chart(fig2)
     st.write("# Dotted line represents relative position of client compared to distribution of all clients for this variable. " \

@@ -1,5 +1,4 @@
-# # !!! THIS IS THE OCDS P8 APP !!!
-
+# Open Classrooms - Data Scientist - Projet 8
 # to run Streamlit App locally, navigate to C:\Users\celin\DS Projets Python\OCDS-repos-all\OCDS-P8-API
 # and launch app by running "streamlit run streamlit_cloud_app_P8_v1.py"
 # web app available at https://ocds-p8-dashboard.streamlit.app/
@@ -20,11 +19,9 @@ if "accessibility_mode" not in st.session_state:
     st.session_state.accessibility_mode = False
 
 # --- WCAG: Set unique and descriptive browser tab title (2.4.2) ---
-st.set_page_config(
-    page_title="Credit Scoring App - Home",
-    page_icon="🏠",
-    layout="wide"
-)
+st.set_page_config(page_title="Credit Scoring App - Home",
+                   page_icon="🏠",
+                   layout="wide")
 
 # st.markdown("# Accessibility Toggle")  # Large label above the toggle
 st.session_state.accessibility_mode = st.toggle(
@@ -32,97 +29,35 @@ st.session_state.accessibility_mode = st.toggle(
     value=st.session_state.accessibility_mode,
     help="Toggle to switch to high contrast and larger fonts for better accessibility (High Contrast, Larger Fonts," \
     " Color-blind Friendly)",
-    key="accessibility_toggle"
-)
+    key="accessibility_toggle")
 
 if not st.session_state.accessibility_mode:
-    st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> 🔍 Click toggle on top left of page" \
-    " to enable Accessibility Mode 🔍 </h1>",
-                    unsafe_allow_html=True)
+    st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> " \
+    "🔍 Click toggle on top left of page" \
+    " to enable Accessibility Mode 🔍 </h1>", unsafe_allow_html=True)
 else:
-    st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:1em;'> 🔍 Click toggle on top left of page" \
-    " to disable Accessibility Mode 🔍 </h1>",
-                    unsafe_allow_html=True) 
-
-# --- WCAG: Accessibility toggle ---
-# if "accessibility_mode" not in st.session_state:
-#     st.session_state.accessibility_mode = False
-
-# if not st.session_state.accessibility_mode:
-#     label = r'''
-#     $\textsf{
-#         \Huge Text \huge Text \LARGE Text \Large Text 
-#         \large Text \normalsize Text \small Text 
-#         \footnotesize Text \scriptsize Text \tiny Text 
-#     }$
-#     '''
-#     st.text_input(label)
-
-# else:
-#     st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> 🔍 Click here to enable Accessibility Mode 🔍 </h1>",
-#                 unsafe_allow_html=True)
-
-
-
-
+    st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:1em;'> " \
+    "🔍 Click toggle on top left of page" \
+    " to disable Accessibility Mode 🔍 </h1>", unsafe_allow_html=True) 
 
 def set_default_theme():
-    st.markdown(
-        """
-        <style>
-        body {
-            font-size: 1em;
-            color: #000000;
-            background-color: white;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+    st.markdown("""<style> body {font-size: 1em; color: #000000; background-color: white; }
+                </style>""", unsafe_allow_html=True)
 
 def set_high_contrast_theme():
-    st.markdown(
-        """
-        <style>
-        body {
-            font-size: 1.25em !important;
-            color: #FFFFFF !important;
-            background-color: #000000 !important;
-        }
-        .stText, .stMarkdown {
-            font-size: 1.25em !important;
-        }
-        button {
-            background-color: yellow !important;
-            color: black !important;
-            font-weight: bold;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+    st.markdown("""<style> body {font-size: 1.25em !important; color: #FFFFFF !important; 
+                background-color: #000000 !important;}.stText, .stMarkdown {font-size: 1.25em !important;}
+                button {background-color: yellow !important; color: black !important;font-weight: bold;}
+                </style>""", unsafe_allow_html=True)
 
 if st.session_state.accessibility_mode:
     set_high_contrast_theme()
-#     st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> Accessibility mode is ON </h1>",
-#                unsafe_allow_html=True)
 else:
     set_default_theme()
-#     st.markdown("<h1 style='color:#242164; text-align:center; font-family:Arial; font-size:3em;'> Accessibility mode is OFF </h1>",
-#                 unsafe_allow_html=True)
 
 # --- Set default background color (WCAG 1.4.1) ---
 def set_bg_color(color):
-    st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background-color: {color};
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+    st.markdown(f"""<style>.stApp {{background-color: {color};}} </style>""", unsafe_allow_html=True)
 
 set_bg_color('#fbf0ef')  # light pink
 
@@ -130,7 +65,7 @@ set_bg_color('#fbf0ef')  # light pink
 if st.session_state.accessibility_mode:
     st.markdown("<h1 style='color:#242164; text-align:center; font-family:Walbaum Heading; font-size:4em;'> Welcome to the </h1>",
                 unsafe_allow_html=True)
-    st.image("logo_bw.png", caption="Company Logo: Prêt à Dépenser", use_container_width=True)  # Added alt text via caption
+    st.image("logo_bw.png", caption="Company Logo: Prêt à Dépenser", use_container_width=True)
     st.markdown("<h1 style='color:#242164; text-align:center; font-family:Walbaum Heading; font-size:4em;'> Credit Scoring App! </h1>",
                 unsafe_allow_html=True)
     st.write("# You can toggle between the Home page and the 4 pages of this app with TAB + ENTER")
