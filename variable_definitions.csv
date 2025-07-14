@@ -1,0 +1,89 @@
+﻿Feature,Definition
+SK_ID_CURR,ID of loan application
+NAME_CONTRACT_TYPE,Identifies if loan is cash or revolving
+IS_MALE,Gender of the client
+FLAG_OWN_CAR,Flags if the client owns a car
+FLAG_OWN_REALTY,Flags if client owns a house or flat
+AMT_CREDIT,Credit amount of the loan
+REGION_POPULATION_RELATIVE,Normalized population of region where client lives (higher number means the client lives in more populated region)
+DAYS_REGISTRATION,How many days before the application did client change his registration
+DAYS_ID_PUBLISH,How many days before the application did client change the identity document with which he applied for the loan
+FLAG_EMAIL,Did client provide email
+REGION_RATING_CLIENT,Our rating of the region where client lives
+REGION_RATING_CLIENT_W_CITY,Our rating of the region where client lives with taking city into account
+OBS_30_CNT_SOCIAL_CIRCLE,How many observation of client's social surroundings with observable 30 DPD (days past due) default
+DEF_30_CNT_SOCIAL_CIRCLE,How many observation of client's social surroundings defaulted on 30 DPD (days past due) 
+OBS_60_CNT_SOCIAL_CIRCLE,How many observation of client's social surroundings with observable 60 DPD (days past due) default
+DEF_60_CNT_SOCIAL_CIRCLE,How many observation of client's social surroundings defaulted on 60 (days past due) DPD
+DAYS_LAST_PHONE_CHANGE,How many days before application did client change phone
+DISPOSABLE_INCOME,total household income minus total amount of monthly repayments on existing loans
+DISPOSABLE_INCOME_per_capita,disposable income divided by the number of people in the household
+WHITE_COLLAR,"Yes if ['Managers', 'High skill tech staff', 'Accountants', 'Secretaries', 'Medicine staff', 'Realty agents', 'HR staff',  'IT staff'], no otherwise"
+INCOME_TYPE,"Category:
+fixed_salary = ['Working', 'State servant']
+commission = ['Commercial associate', 'Businessman']
+benefits = ['Pensioner', 'Unemployed', 'Student', 'Maternity leave']"
+UPPER_EDUCATION,"Category:
+secondary_or_lower = ['Secondary / secondary special', 'Lower secondary']
+higher_or_tertiary = ['Higher education', 'Incomplete higher', 'Academic degree']"
+IS_MARRIED,"Category:
+married = ['Married', 'Civil marriage']
+single_or_unknown = ['Single / not married', 'Separated', 'Widow', 'Unknown']"
+LIVES_INDEPENDENTLY,"Category:
+independent = ['House / apartment', 'Rented apartment', 'Office apartment']
+social = ['With parents', 'Municipal apartment', 'Co-op apartment']"
+YEAR_BIRTH,age of client at time of application
+YEARS_EMPLOYED_AS_ADULT_%,% of years the client was employed full time since turning 21
+PHONE_PROVIDED,"Flag  if client provided any of 'FLAG_MOBIL', 'FLAG_EMP_PHONE', 'FLAG_WORK_PHONE' or 'FLAG_PHONE' "
+PHONE_REACHABLE,Flag if client provided  'FLAG_CONT_MOBILE' 
+ADDRESS_MISMATCH,"Flag if client answered yes to any pof  'REG_REGION_NOT_LIVE_REGION', 'REG_REGION_NOT_WORK_REGION',   'LIVE_REGION_NOT_WORK_REGION',    'REG_CITY_NOT_LIVE_CITY' , 'REG_CITY_NOT_WORK_CITY' or 'LIVE_CITY_NOT_WORK_CITY' "
+CREDIT_RATING,Average of all existing known credit ratings for the client from other credit providers
+NB_APPLICATION_DOCUMENTS_%,% of total 20 required documents provided
+REQUESTS_ABOUT_CLIENT_1Y,Total number of enquiries made about client by other credit providers over the past year
+EMPLOYMENT_SECTOR,"Category: 
+primary = ['Agriculture']
+secondary = ['Electricity', 'Construction', 'Housing','Industry: type 11','Industry: type 1', 'Industry: type 4','Industry: type 7',
+            'Industry: type 3','Industry: type 9','Industry: type 2','Industry: type 12','Industry: type 5', 'Industry: type 10',
+             'Industry: type 13','Industry: type 8','Industry: type 6']
+tertiary = ['Business Entity Type 3','Medicine','Business Entity Type 2','Transport: type 2','Trade: type 7','Services','Transport: type 4',
+           'Security','Trade: type 2','Transport: type 3','Business Entity Type 1','Restaurant','Hotel','Trade: type 3','Bank','Insurance', 
+           'Trade: type 6','Transport: type 1','Mobile','Trade: type 1', 'Legal Services', 'Advertising', 'Trade: type 5', 'Cleaning',
+           'School','Religion','Kindergarten', 'University','Culture', 'Trade: type 4', 'Telecom','Realtor']
+government = ['Government', 'Military', 'Security Ministries','Emergency','Police','Postal']
+other = ['Other', 'XNA', 'Self-employed']"
+b_AMT_CREDIT_MAX_OVERDUE_max,maximum amount overdue at any one point in the whole of the client's history with the Credit Bureau (active and closed credits)
+b_AMT_CREDIT_SUM_OVERDUE_sum,current total of overdue amounts on all of the client's credits declared to the Credit Bureau
+pcb_CNT_INSTALMENT_FUTURE_max,maximum number of future instalments due on all of the client's outstanding cash loans with Home Credit
+ccb_AMT_BALANCE_mean,average monthly credit card balance on all of the client's history with Home Credit
+ccb_AMT_CREDIT_LIMIT_ACTUAL_mean,average credit card limit during the month of the previous credit across all credit cards held by the client
+ccb_AMT_DRAWINGS_TOTAL_mean,average total drawings during the month of the previous credit across all credit cards held by the client
+ccb_AMT_TOTAL_RECEIVABLE_mean,average total amount receivable during the month of the previous credit across all credit cards held by the client
+ccb_TOTAL_INSTALMENTS_max,maximum total amount of instalments remaining across all credit cards held by the client
+ccb_CNT_DRAWINGS_TOTAL_mean,average current total drawings across all credit cards held by the client
+ccb_CARD_OVERDRAWN_sum,total amount by which the client is currently exceeding the credit limit across all credit cards held by the client
+ccb_CARD_OVERDRAWN_%_mean,average amount by which the client has exceeded the credit limit across all credit cards held by the client
+ip_PMT_DELAY_mean,average number of days the client paid instalments late
+ip_EARLY_PMT_mean,average number of days the client paid instalments early
+ip_AMT_OVERPAID_%_mean,average amount by which the client's repayment has exceeded the instalment due
+ip_AMT_UNDERPAID_%_mean,average shortfall on the amount of the instalments due by the client
+pa_AMT_APPLICATION_mean,average amount of all past applications for any type of credit with Home Credit by the client (active and closed credits)
+pa_RATE_DOWN_PAYMENT_mean,average amount of down payment for all past applications for any type of credit with Home Credit by the client (active and closed credits)
+pa_NFLAG_INSURED_ON_APPROVAL_sum,sum of all approved credits which the client has insured upon approval by Home Credit
+pa_BANK_DECLINED_sum,total number of credit application made by the client and declined by Home Credit (excluding current application)
+pa_REMAINING_CREDIT_DURATION_Y_mean,average credit duration in years for all the active credits the client has with Home Credit
+pa_CREDIT_SECURITY_sum,number of credits the client has with Home Credit where the amount of the credit is less than the value of the asset financed by the client with the credit
+TOTAL_APPROVED_CREDITS,total number of credit applications made by the client with Home Credit or other lenders and which have been approved (excluding current application)
+TOTAL_PAYMENT_DELAYS_DAYS,total average number of days by which the client is late on repayments across their whole credit history with Home Credit or other lenders (active or closed credits)
+TOTAL_ACTIVE_CAR_LOANS,total number of currenty active car loans the client has with Home Credit or any other lenders
+TOTAL_ACTIVE_OTHER_LOANS,total number of currenty active other loans the client has with Home Credit or any other lenders
+TOTAL_ACTIVE_CONSUMER_LOANS,total number of currenty active consumer loans the client has with Home Credit or any other lenders
+TOTAL_ACTIVE_MICRO_LOANS,total number of currenty active micro-loans the client has with Home Credit or any other lenders
+TOTAL_ACTIVE_MORTGAGES,total number of currenty active mortgages the client has with Home Credit or any other lenders
+TOTAL_ACTIVE_CREDIT_CARDS,total number of currenty active credit cards the client has with Home Credit or any other lenders
+DEBT_RENEGOCIATIONS,total number of credit extensions or unapproved delayed repayments in the client's credit history with Home Credit and other lenders
+CLIENT_BAD_CREDIT_HISTORY,total number of past credits of the client which were written off or sold as bad debt by the lender
+CLIENT_FRAUD_FLAG,total number of occurrences a credit declined to the client was flagged as having a documentation or other issue with Home Credit and other lenders
+CLIENT_WITHDRAWN_APPLICATIONS,total number of applications not processed to approval/refusal because the client withdrew the application with Home Credit or other lenders before a final decision was made
+DOWN_PAYMENT_CURR_%,estimated % of the down payment to be made by the client for the current credit application
+DEBT_RATE_INC_CURR_%,total current debt % of client compared to total disposable income for the household (including current application)
+b_DAYS_CREDIT_CARD_max,maximum length of all closed or active credit card credits ever held by the client with other lenders

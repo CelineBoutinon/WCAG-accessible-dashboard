@@ -90,13 +90,29 @@ if not st.session_state.accessibility_mode:
                 'pa_RATE_DOWN_PAYMENT_mean', 'pa_REMAINING_CREDIT_DURATION_Y_mean', 'TOTAL_PAYMENT_DELAYS_DAYS', 
                 'DOWN_PAYMENT_CURR_%', 'DEBT_RATE_INC_CURR_%', 'b_DAYS_CREDIT_CARD_max']
 
-
+    variable_definitions=pd.read_csv('variable_definitions.csv')
+ 
     # Column selection
     st.write("### Choose the horizontal axis for the scatter plot:")
     x_column = st.selectbox(" ", float_cols)
+    # st.write("### You chose variable", x_column, "for the horizontal axis.")
+    # Get the definition for the selected variable
+    definition_x = variable_definitions[variable_definitions['Feature'] == x_column]
+    if not definition_x.empty:
+        definition = definition_x['Definition'].values[0]
+    else:
+        definition = "No definition found for this variable."
+    st.write("### Variable definition:", definition)
     st.write("### Choose the vertical axis for the scatter plot:")
     y_column = st.selectbox("  ", float_cols)
-
+    # st.write("### You chose variable", y_column, "for the vertical axis.")
+    # Get the definition for the selected variable
+    definition_y = variable_definitions[variable_definitions['Feature'] == y_column]
+    if not definition_y.empty:
+        definition = definition_y['Definition'].values[0]
+    else:
+        definition = "No definition found for this variable."
+    st.write("### Variable definition:", definition)
     if app_response.status_code == 200:
         fig = px.scatter(client_data, x=x_column, y=y_column,
                         color_discrete_sequence=['#F1BD5F'],
@@ -137,14 +153,30 @@ else:
                 'ip_EARLY_PMT_mean', 'ip_AMT_OVERPAID_%_mean', 'ip_AMT_UNDERPAID_%_mean', 'pa_AMT_APPLICATION_mean', 
                 'pa_RATE_DOWN_PAYMENT_mean', 'pa_REMAINING_CREDIT_DURATION_Y_mean', 'TOTAL_PAYMENT_DELAYS_DAYS', 
                 'DOWN_PAYMENT_CURR_%', 'DEBT_RATE_INC_CURR_%', 'b_DAYS_CREDIT_CARD_max']
-
+    
+    variable_definitions=pd.read_csv('variable_definitions.csv')
     # Column selection
     st.write("# Choose the horizontal axis for the scatter plot:")
     x_column = st.selectbox(" ", float_cols)
     st.write("# You chose variable", x_column, "for the horizontal axis.")
+    # Get the definition for the selected variable
+    definition_x = variable_definitions[variable_definitions['Feature'] == x_column]
+    if not definition_x.empty:
+        definition = definition_x['Definition'].values[0]
+    else:
+        definition = "No definition found for this variable."
+    st.write("# Variable definition:", definition)
+
     st.write("# Choose the vertical axis for the scatter plot:")
     y_column = st.selectbox("  ", float_cols)
     st.write("# You chose variable", y_column, "for the vertical axis.")
+       # Get the definition for the selected variable
+    definition_y = variable_definitions[variable_definitions['Feature'] == y_column]
+    if not definition_y.empty:
+        definition = definition_y['Definition'].values[0]
+    else:
+        definition = "No definition found for this variable."
+    st.write("# Variable definition:", definition)
 
     if app_response.status_code == 200:
         fig = px.scatter(client_data, x=x_column, y=y_column,

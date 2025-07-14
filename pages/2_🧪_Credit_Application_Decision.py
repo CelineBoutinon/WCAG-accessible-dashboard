@@ -188,7 +188,7 @@ else:
         st.error(f"Failed to fetch Shap values for client application. API status code : {app_response.status_code}")
 
     # Display global feature importance
-    st.markdown("#### Top 5 decision factors across all clients:")
+    st.markdown("# Top 5 decision factors across all clients:")
     st.image("global_feature_importance.png", caption="Top 5 credit application decision factors",
              use_container_width=True)
 

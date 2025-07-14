@@ -46,7 +46,7 @@ else:
 if st.session_state.accessibility_mode:
     st.image("bandeau_bw.png", caption="Company Logo: Prêt à Dépenser", use_container_width=True)  # Added alt text via caption
 else:
-    st.image("bandeau.png", use_container_width=True)
+    st.image("bandeau.png", use_container_width=False)
 
 # --- Set default background color (WCAG 1.4.1) ---
 def set_bg_color(color):
@@ -88,11 +88,21 @@ float_cols = ['AMT_CREDIT', 'DISPOSABLE_INCOME', 'DISPOSABLE_INCOME_per_capita',
               'pa_RATE_DOWN_PAYMENT_mean', 'pa_REMAINING_CREDIT_DURATION_Y_mean', 'TOTAL_PAYMENT_DELAYS_DAYS', 
               'DOWN_PAYMENT_CURR_%', 'DEBT_RATE_INC_CURR_%', 'b_DAYS_CREDIT_CARD_max']
 
+variable_definitions=pd.read_csv('variable_definitions.csv')
+
 if not st.session_state.accessibility_mode:
     st.write("## 👌 Step 3 - Choose field for client univariate analysis display:")
     # Create boxplot
     st.write("### Choose a column for the box plot:")
     box_column = st.selectbox("", float_cols)
+    # st.write("### You chose variable", box_column, ".")
+    # Get the definition for the selected variable
+    definition_row = variable_definitions[variable_definitions['Feature'] == box_column]
+    if not definition_row.empty:
+        definition = definition_row['Definition'].values[0]
+    else:
+        definition = "No definition found for this variable."
+    st.write("### Variable definition:", definition)
     fig2 = go.Figure()
     fig2.add_trace(go.Violin(y=client_data[box_column],
                     name='Clients Distribution',
@@ -126,6 +136,9 @@ if not st.session_state.accessibility_mode:
     else:
         st.warning(f"Client ID {selected_value} not found in the dataset for the box plot.")
     st.plotly_chart(fig2)
+    st.write("### The dotted line represents relative position of client compared to distribution of all clients for this variable. " \
+    "The solid line represents the average of all clients for this variable.")
+    st.write("### Graph is interactive. Hover over top right corner of graph for zoom options.")
 
 else:
     st.write("# 👌🏿 Step 3 - Choose field for client univariate analysis display:")
@@ -133,6 +146,13 @@ else:
     st.write("# Choose a column for the box plot:")
     box_column = st.selectbox("", float_cols)
     st.write("# You chose variable", box_column, ".")
+    # Get the definition for the selected variable
+    definition_row = variable_definitions[variable_definitions['Feature'] == box_column]
+    if not definition_row.empty:
+        definition = definition_row['Definition'].values[0]
+    else:
+        definition = "No definition found for this variable."
+    st.write("# Variable definition:", definition)
     fig2 = go.Figure()
     st.write("# Clients Distribution:")
     fig2.add_trace(go.Violin(y=client_data[box_column],
@@ -169,7 +189,7 @@ else:
         st.warning(f"Client ID {selected_value} not found in the dataset for the box plot.")
 
     st.plotly_chart(fig2)
-    st.write("# Dotted line represents relative position of client compared to distribution of all clients for this variable. " \
+    st.write("# The dotted line represents relative position of client compared to distribution of all clients for this variable. " \
     "The solid line represents the average of all clients for this variable.")
     st.write("# Graph is interactive. Hover over top right corner of graph for zoom options.")
 
