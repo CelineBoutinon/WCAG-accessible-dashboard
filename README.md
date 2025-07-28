@@ -11,11 +11,18 @@ Projet realisé en juillet 2025 dans le cadre de ma formation Data Scientist ave
 
 ## Liste des fichiers
 
-Pour le code de l'API et les tests, se référer au repo https://github.com/CelineBoutinon/credit-scoring-api.
-Pour le modèle de credit scoring, se référer au repo https://github.com/CelineBoutinon/credit-scoring.
-Les données brutes sont disponibles sur https://www.kaggle.com/c/home-credit-default-risk/data ou en téléchargement direct sur https://s3-eu-west-1.amazonaws.com/static.oc-static.com/prod/courses/files/Parcours_data_scientist/Projet+-+Impl%C3%A9menter+un+mod%C3%A8le+de+scoring/Projet+Mise+en+prod+-+home-credit-default-risk.zip.
+Pour le code de l'API et les tests, se référer au repo https://github.com/CelineBoutinon/credit-scoring-api.  
+Pour le modèle de credit scoring, se référer au repo https://github.com/CelineBoutinon/credit-scoring.  
+Les données brutes sont disponibles sur https://www.kaggle.com/c/home-credit-default-risk/data ou en téléchargement direct sur https://s3-eu-west-1.amazonaws.com/static.oc-static.com/prod/courses/files/Parcours_data_scientist/Projet+-+Impl%C3%A9menter+un+mod%C3%A8le+de+scoring/Projet+Mise+en+prod+-+home-credit-default-risk.zip.  
 
+* **fichiers :**
+  - **app.pi :** code Python de l'API Flask accessible sur https://credit-scoring-api-0p1u.onrender.com
+  - **streamlit_cloud_app_P8_v1.py :** code Python de la page d'accueil de l'application Streamlit disponible sur https://ocds-p8-dashboard.streamlit.app/
+  - **slideshow.pdf :** diapositives de présentation du projet
+  - **merged_data_dico.csv :** dictionnaire des données accessibles sur les graphiques de l'application
 
+* **dossiers :**
+- **pages :** code Python des 4 pages de l'application Streamlit
 
 ## Requirements
 

@@ -1,9 +1,3 @@
-# Open Classrooms - Data Scientist - Projet 8
-# to run Streamlit App locally, navigate to C:\Users\celin\DS Projets Python\OCDS-repos-all\OCDS-P8-API
-# and launch app by running "streamlit run streamlit_cloud_app_P8_v1.py"
-# web app available at https://ocds-p8-dashboard.streamlit.app/
-
-
 import streamlit as st
 import requests
 import json
