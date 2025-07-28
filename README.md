@@ -24,7 +24,7 @@ Les données brutes sont disponibles sur https://www.kaggle.com/c/home-credit-de
 * **dossiers :**
   - **pages :** code Python des 4 pages de l'application Streamlit
 
-## Requirements
+## Langages & software
 
  * python 3.9.13
 
