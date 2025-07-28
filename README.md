@@ -22,7 +22,7 @@ Les données brutes sont disponibles sur https://www.kaggle.com/c/home-credit-de
   - **merged_data_dico.csv :** dictionnaire des données accessibles sur les graphiques de l'application
 
 * **dossiers :**
-- **pages :** code Python des 4 pages de l'application Streamlit
+  - **pages :** code Python des 4 pages de l'application Streamlit
 
 ## Requirements
 
